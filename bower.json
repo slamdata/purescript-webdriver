@@ -1,0 +1,23 @@
+{
+  "name": "purescript-webdriver",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slamdata/purescript-webdriver"
+  },
+  "homepage": "https://github.com/slamdata/purescript-webdriver",
+  "authors": [
+    "Maxim Zimaliev <zimaliev@yandex.ru>"
+  ],
+  "description": "A PureScript interface to Selenium's Node Webdriver",
+  "keywords": [
+    "purescript",
+    "webdriver",
+    "selenium"
+  ],
+  "license": "Apache 2.0",
+  "dependencies": {
+    "purescript-base": "~0.1.0",
+    "purescript-aff": "~0.11.3",
+    "purescript-dom": "~0.1.3"
+  }
+}
