@@ -1,0 +1,18 @@
+{
+  "name": "purescript-webdriver",
+  "description": "A PureScript interface to Selenium's Node Webdriver.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slamdata/purescript-webdriver.git"
+  },
+  "author": "Maxim Zimaliev <zimaliev@gmail.com>",
+  "scripts": {
+    "example": "npm install && gulp make-example && node example/main.js"
+  },
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-purescript": "^0.5.0",
+    "purescript": "^0.7.1",
+    "selenium-webdriver": "^2.46.1"
+  }
+}

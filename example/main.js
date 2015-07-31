@@ -1,0 +1,1 @@
+require("Example.Main").main();
