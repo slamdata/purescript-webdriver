@@ -23,6 +23,7 @@ module Selenium
        , getCssValue
        , getTitle
        , isDisplayed
+       , isEnabled
        , getInnerHtml
        , clearEl
        ) where
@@ -110,6 +111,7 @@ foreign import sendKeysEl :: forall e. String -> Element -> Aff (selenium :: SEL
 foreign import clickEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
 foreign import getCssValue :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) String
 foreign import isDisplayed :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
+foreign import isEnabled :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM|e) String
 -- | Clear `value` of element, if it has no value will do nothing. 
 -- | If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`) 

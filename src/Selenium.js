@@ -156,6 +156,14 @@ exports.isDisplayed = function(el) {
     };
 };
 
+exports.isEnabled = function(el) {
+    return function(cb, eb) {
+        return el.isEnabled().then(function(is) {
+            return cb(is);
+        }).thenCatch(eb);
+    };
+};
+
 exports.getCurrentUrl = function(driver) {
     return function(cb, eb) {
         return driver.getCurrentUrl().then(cb).thenCatch(eb);
