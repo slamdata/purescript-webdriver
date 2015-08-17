@@ -148,6 +148,14 @@ exports.getCssValue = function(el) {
     };
 };
 
+exports.getAttribute = function(el) {
+    return function(str) {
+        return function(cb, eb) {
+            return el.getAttribute(str).then(cb).thenCatch(eb);
+        };
+    };
+};
+
 exports.isDisplayed = function(el) {
     return function(cb, eb) {
         return el.isDisplayed().then(function(is) {
