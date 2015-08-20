@@ -16,7 +16,17 @@ exports.wait = function(check) {
         return function(driver) {
             return function(cb, eb) {
                 var p = new webdriver.promise.Promise(check);
-                driver.wait(p, timeout).then(cb).thenCatch(eb);
+                driver.wait(p, timeout)
+                    .then(function() {
+                        p.then(function(res) {
+                            if (res) {
+                                cb();
+                            } else {
+                                eb(new Error("wait promise has returned false"));
+                            }
+                        }).thenCatch(eb);
+                    })
+                    .thenCatch(eb);
             };
         };
     };
