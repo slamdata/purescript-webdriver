@@ -39,6 +39,12 @@ usingServer :: String -> Build Unit
 scrollBehaviour :: ScrollBehaviour -> Build Unit
 ```
 
+#### `withCapabilities`
+
+``` purescript
+withCapabilities :: Capabilities -> Build Unit
+```
+
 #### `build`
 
 ``` purescript
