@@ -14,7 +14,7 @@ Go to url
 wait :: forall e. Aff (selenium :: SELENIUM | e) Boolean -> Int -> Driver -> Aff (selenium :: SELENIUM | e) Unit
 ```
 
-Wait until first argument returns 'true'. If it returns false an error will be raised 
+Wait until first argument returns 'true'. If it returns false an error will be raised
 
 #### `quit`
 
@@ -60,10 +60,10 @@ byXPath :: forall e. String -> Aff (selenium :: SELENIUM | e) Locator
 affLocator :: forall e. (Element -> Aff (selenium :: SELENIUM | e) Element) -> Aff (selenium :: SELENIUM | e) Locator
 ```
 
-Build locator from asynchronous function returning element. 
+Build locator from asynchronous function returning element.
 I.e. this locator will find first visible element with `.common-element` class
-```purescript 
-affLocator \el -> do 
+```purescript
+affLocator \el -> do
   commonElements <- byCss ".common-element" >>= findElements el
   flagedElements <- traverse (\el -> Tuple el <$> isVisible el) commonElements
   maybe err pure $ foldl foldFn Nothing flagedElements
@@ -96,7 +96,7 @@ Finds elements by locator from `document`
 findChild :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM | e) (Maybe Element)
 ```
 
-Same as `findElement` but starts searching from custom element 
+Same as `findElement` but starts searching from custom element
 
 #### `findChildren`
 
@@ -198,9 +198,9 @@ getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM | e) String
 clearEl :: forall e. Element -> Aff (selenium :: SELENIUM | e) Unit
 ```
 
-Clear `value` of element, if it has no value will do nothing. 
-If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`) 
-will not work -- to clear such inputs one should use direct signal from 
+Clear `value` of element, if it has no value will do nothing.
+If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`)
+will not work -- to clear such inputs one should use direct signal from
 `Selenium.ActionSequence`
 
 

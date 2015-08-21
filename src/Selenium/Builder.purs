@@ -4,6 +4,7 @@ module Selenium.Builder
        , forBrowser
        , usingServer
        , scrollBehaviour
+       , withCapabilities
        , Build()
        ) where
 
@@ -68,10 +69,13 @@ usingServer = rule <<< UsingServer
 scrollBehaviour :: ScrollBehaviour -> Build Unit
 scrollBehaviour = rule <<< SetScrollBehaviour
 
-build :: forall e. Build Unit -> Aff (selenium :: SELENIUM|e) Driver 
-build commands = do 
+withCapabilities :: Capabilities -> Build Unit
+withCapabilities = rule <<< WithCapabilities
+
+build :: forall e. Build Unit -> Aff (selenium :: SELENIUM|e) Driver
+build commands = do
   builder <- _newBuilder
-  _build $ interpret (execWriter $ unBuild commands) builder 
+  _build $ interpret (execWriter $ unBuild commands) builder
 
 
 interpret :: List Command -> Builder -> Builder
@@ -82,13 +86,15 @@ interpret commands b = foldl foldFn b commands
   foldFn b (ForBrowser br v p) = runFn4 _forBrowser b br v p
   foldFn b (UsingServer s) = runFn2 _usingServer b s
   foldFn b (SetScrollBehaviour bh) = runFn2 _setScrollBehaviour b bh
+  foldFn b (WithCapabilities c) = runFn2 _withCapabilities b c
   foldFn b _ = b
 
 
-foreign import _newBuilder :: forall e. Aff (selenium :: SELENIUM|e) Builder 
-foreign import _build :: forall e. Builder -> Aff (selenium :: SELENIUM|e) Driver 
+foreign import _newBuilder :: forall e. Aff (selenium :: SELENIUM|e) Builder
+foreign import _build :: forall e. Builder -> Aff (selenium :: SELENIUM|e) Driver
 
 foreign import _browser :: Fn2 Builder String Builder
 foreign import _forBrowser :: Fn4 Builder String String String Builder
 foreign import _usingServer :: Fn2 Builder String Builder
 foreign import _setScrollBehaviour :: Fn2 Builder ScrollBehaviour Builder
+foreign import _withCapabilities :: Fn2 Builder Capabilities Builder

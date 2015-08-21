@@ -37,3 +37,7 @@ exports._usingServer = function(b, s) {
 exports._setScrollBehaviour = function(b, bh) {
     return b.setScrollBehaviour(bh);
 };
+
+exports._withCapabilities = function(b, c) {
+    return b.withCapabilities(c);
+};
