@@ -16,8 +16,12 @@
   ],
   "license": "Apache 2.0",
   "dependencies": {
-    "purescript-base": "~0.1.0",
-    "purescript-aff": "~0.11.3",
-    "purescript-dom": "~0.1.3"
+    "purescript-base": "^0.1.0",
+    "purescript-aff": "^0.11.3",
+    "purescript-dom": "^0.2.4"
+  },
+  "resolutions": {
+    "purescript-enums": "^0.7.0",
+    "purescript-strings": "^0.7.0"
   }
 }
