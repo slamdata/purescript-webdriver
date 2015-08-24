@@ -36,6 +36,7 @@ import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Aff (Aff())
 import Selenium.Types
 import Data.Unfoldable (Unfoldable, unfoldr)
+import Data.Foreign (Foreign())
 import Data.Maybe (Maybe(..))
 import Data.Array (uncons)
 import Data.Tuple (Tuple(..))
@@ -106,7 +107,7 @@ foreign import to :: forall e. String -> Driver -> Aff (selenium :: SELENIUM|e) 
 foreign import getCurrentUrl :: forall e. Driver -> Aff (selenium :: SELENIUM|e) String
 foreign import getTitle :: forall e. Driver -> Aff (selenium :: SELENIUM|e) String
 -- | Executes javascript script from `String` argument.
-foreign import executeStr :: forall e. Driver -> String -> Aff (selenium :: SELENIUM|e) Unit
+foreign import executeStr :: forall e. Driver -> String -> Aff (selenium :: SELENIUM|e) Foreign
 
 foreign import sendKeysEl :: forall e. String -> Element -> Aff (selenium :: SELENIUM|e) Unit
 foreign import clickEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
