@@ -108,6 +108,12 @@ data ScrollBehaviour :: *
 data Capabilities :: *
 ```
 
+#### `FileDetector`
+
+``` purescript
+data FileDetector :: *
+```
+
 #### `Location`
 
 ``` purescript

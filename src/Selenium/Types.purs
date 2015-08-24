@@ -1,4 +1,4 @@
-module Selenium.Types where 
+module Selenium.Types where
 
 foreign import data Builder :: *
 foreign import data SELENIUM :: !
@@ -18,6 +18,7 @@ foreign import data ProxyConfig :: *
 foreign import data SafariOptions :: *
 foreign import data ScrollBehaviour :: *
 foreign import data Capabilities :: *
+foreign import data FileDetector :: *
 
 
 type Location =

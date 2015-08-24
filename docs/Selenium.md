@@ -106,6 +106,12 @@ findChildren :: forall e f. (Unfoldable f) => Element -> Locator -> Aff (seleniu
 
 Same as `findElements` but starts searching from custom element
 
+#### `setFileDetector`
+
+``` purescript
+setFileDetector :: forall e. Driver -> FileDetector -> Eff (selenium :: SELENIUM | e) Unit
+```
+
 #### `navigateBack`
 
 ``` purescript

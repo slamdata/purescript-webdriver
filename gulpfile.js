@@ -23,7 +23,7 @@ var exampleForeigns = [
 gulp.task("make", function() {
     return purescript.psc({
         src: sources,
-        ffi: foreigns 
+        ffi: foreigns
     });
 });
 
@@ -45,6 +45,7 @@ gulp.task("docs", function() {
             "Selenium.Builder": "docs/Selenium/Builder.md",
             "Selenium.Key": "docs/Selenium/Key.md",
             "Selenium.MouseButton": "docs/Selenium/MouseButton.md",
+            "Selenium.Remote": "docs/Selenium/Remote.md",
             "Selenium.ScrollBehaviuor": "docs/Selenium/ScrollBehaviuor.md",
             "Selenium.Types": "docs/Selenium/Types.md"
         }
