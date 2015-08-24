@@ -145,7 +145,7 @@ getTitle :: forall e. Driver -> Aff (selenium :: SELENIUM | e) String
 #### `executeStr`
 
 ``` purescript
-executeStr :: forall e. Driver -> String -> Aff (selenium :: SELENIUM | e) Unit
+executeStr :: forall e. Driver -> String -> Aff (selenium :: SELENIUM | e) Foreign
 ```
 
 Executes javascript script from `String` argument.
