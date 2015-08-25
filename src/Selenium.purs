@@ -27,6 +27,7 @@ module Selenium
        , isEnabled
        , getInnerHtml
        , clearEl
+       , setFileDetector
        ) where
 
 import Prelude
@@ -44,8 +45,8 @@ import DOM (DOM())
 
 -- | Go to url
 foreign import get :: forall e. Driver -> String -> Aff (selenium :: SELENIUM|e) Unit
--- | Wait until first argument returns 'true'. If it returns false an error will be raised 
-foreign import wait :: forall e. Aff (selenium :: SELENIUM|e) Boolean -> 
+-- | Wait until first argument returns 'true'. If it returns false an error will be raised
+foreign import wait :: forall e. Aff (selenium :: SELENIUM|e) Boolean ->
                                  Int -> Driver ->
                                  Aff (selenium :: SELENIUM|e) Unit
 -- | Finalizer
@@ -58,10 +59,10 @@ foreign import byCss :: forall e. String -> Aff (selenium :: SELENIUM|e) Locator
 foreign import byId :: forall e. String -> Aff (selenium :: SELENIUM|e) Locator
 foreign import byName :: forall e. String -> Aff (selenium :: SELENIUM|e) Locator
 foreign import byXPath :: forall e. String -> Aff (selenium :: SELENIUM|e) Locator
--- | Build locator from asynchronous function returning element. 
+-- | Build locator from asynchronous function returning element.
 -- | I.e. this locator will find first visible element with `.common-element` class
--- | ```purescript 
--- | affLocator \el -> do 
+-- | ```purescript
+-- | affLocator \el -> do
 -- |   commonElements <- byCss ".common-element" >>= findElements el
 -- |   flagedElements <- traverse (\el -> Tuple el <$> isVisible el) commonElements
 -- |   maybe err pure $ foldl foldFn Nothing flagedElements
@@ -73,9 +74,9 @@ foreign import byXPath :: forall e. String -> Aff (selenium :: SELENIUM|e) Locat
 foreign import affLocator :: forall e. (Element -> Aff (selenium :: SELENIUM|e) Element) -> Aff (selenium :: SELENIUM|e) Locator
 
 
-foreign import _findElement :: forall e a. Maybe a -> (a -> Maybe a) -> 
+foreign import _findElement :: forall e a. Maybe a -> (a -> Maybe a) ->
                                Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
-foreign import _findChild :: forall e a. Maybe a -> (a -> Maybe a) -> 
+foreign import _findChild :: forall e a. Maybe a -> (a -> Maybe a) ->
                              Element -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
 foreign import _findElements :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Array Element)
 foreign import _findChildren :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) (Array Element)
@@ -83,22 +84,23 @@ foreign import _findChildren :: forall e. Element -> Locator -> Aff (selenium ::
 -- | Tries to find an element starting from `document` will return `Nothing` if there
 -- | is no element can be found by locator
 findElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
-findElement = _findElement Nothing Just 
+findElement = _findElement Nothing Just
 
 -- | Finds elements by locator from `document`
-findElements :: forall e f. (Unfoldable f) => Driver -> Locator -> Aff (selenium :: SELENIUM|e) (f Element) 
-findElements driver locator = 
+findElements :: forall e f. (Unfoldable f) => Driver -> Locator -> Aff (selenium :: SELENIUM|e) (f Element)
+findElements driver locator =
   unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs) <$> (_findElements driver locator)
 
--- | Same as `findElement` but starts searching from custom element 
+-- | Same as `findElement` but starts searching from custom element
 findChild :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
 findChild = _findChild Nothing Just
 
 -- | Same as `findElements` but starts searching from custom element
-findChildren :: forall e f. (Unfoldable f) => Element -> Locator -> Aff (selenium ::SELENIUM|e) (f Element) 
-findChildren el locator = 
+findChildren :: forall e f. (Unfoldable f) => Element -> Locator -> Aff (selenium ::SELENIUM|e) (f Element)
+findChildren el locator =
   unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs) <$> (_findChildren el locator)
 
+foreign import setFileDetector :: forall e. Driver -> FileDetector -> Eff (selenium :: SELENIUM|e) Unit
 
 foreign import navigateBack :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
 foreign import navigateForward :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
@@ -116,14 +118,11 @@ foreign import getAttribute :: forall e. Element -> String -> Aff (selenium :: S
 foreign import isDisplayed :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import isEnabled :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM|e) String
--- | Clear `value` of element, if it has no value will do nothing. 
--- | If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`) 
--- | will not work -- to clear such inputs one should use direct signal from 
+-- | Clear `value` of element, if it has no value will do nothing.
+-- | If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`)
+-- | will not work -- to clear such inputs one should use direct signal from
 -- | `Selenium.ActionSequence`
 foreign import clearEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
-
-          
-
 
 
 

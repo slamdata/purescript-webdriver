@@ -11,6 +11,14 @@ exports.get = function(driver) {
     };
 };
 
+exports.setFileDetector = function(driver) {
+    return function(detector) {
+        return function () {
+          driver.setFileDetector(detector);
+        };
+    };
+};
+
 exports.wait = function(check) {
     return function(timeout) {
         return function(driver) {
