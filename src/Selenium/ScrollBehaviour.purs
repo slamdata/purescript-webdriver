@@ -1,4 +1,4 @@
-module Selenium.ScrollBehaviuor where
+module Selenium.ScrollBehaviour where
 
 import Selenium.Types
 

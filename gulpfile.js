@@ -46,7 +46,7 @@ gulp.task("docs", function() {
             "Selenium.Key": "docs/Selenium/Key.md",
             "Selenium.MouseButton": "docs/Selenium/MouseButton.md",
             "Selenium.Remote": "docs/Selenium/Remote.md",
-            "Selenium.ScrollBehaviuor": "docs/Selenium/ScrollBehaviuor.md",
+            "Selenium.ScrollBehaviour": "docs/Selenium/ScrollBehaviour.md",
             "Selenium.Types": "docs/Selenium/Types.md"
         }
     });
