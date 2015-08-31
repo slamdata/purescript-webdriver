@@ -28,6 +28,7 @@ module Selenium
        , getInnerHtml
        , clearEl
        , setFileDetector
+       , takeScreenshot
        ) where
 
 import Prelude
@@ -124,5 +125,6 @@ foreign import getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM|e)
 -- | `Selenium.ActionSequence`
 foreign import clearEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
 
-
+-- | Returns png base64 encoded png image
+foreign import takeScreenshot :: forall e. Driver -> Aff (selenium :: SELENIUM |e) String
 

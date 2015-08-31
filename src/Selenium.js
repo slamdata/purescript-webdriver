@@ -262,3 +262,11 @@ exports.clearEl = function(el) {
         el.clear().then(cb).thenCatch(eb);
     };
 };
+
+exports.takeScreenshot = function(driver) {
+    return function(cb, eb) {
+        driver.takeScreenshot()
+            .then(cb)
+            .thenCatch(eb);
+    };
+};
