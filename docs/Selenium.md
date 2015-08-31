@@ -209,4 +209,12 @@ If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`)
 will not work -- to clear such inputs one should use direct signal from
 `Selenium.ActionSequence`
 
+#### `takeScreenshot`
+
+``` purescript
+takeScreenshot :: forall e. Driver -> Aff (selenium :: SELENIUM | e) String
+```
+
+Returns png base64 encoded png image
+
 
