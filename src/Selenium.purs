@@ -12,10 +12,12 @@ module Selenium
        , findElements
        , findChild
        , findChildren
+       , findExact
+       , childExact
        , navigateBack
        , navigateForward
        , refresh
-       , to
+       , navigateTo
        , getCurrentUrl
        , executeStr
        , sendKeysEl
@@ -81,6 +83,8 @@ foreign import _findChild :: forall e a. Maybe a -> (a -> Maybe a) ->
                              Element -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
 foreign import _findElements :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Array Element)
 foreign import _findChildren :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) (Array Element)
+foreign import findExact :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) Element 
+foreign import childExact :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) Element
 
 -- | Tries to find an element starting from `document` will return `Nothing` if there
 -- | is no element can be found by locator
@@ -101,12 +105,12 @@ findChildren :: forall e f. (Unfoldable f) => Element -> Locator -> Aff (seleniu
 findChildren el locator =
   unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs) <$> (_findChildren el locator)
 
-foreign import setFileDetector :: forall e. Driver -> FileDetector -> Eff (selenium :: SELENIUM|e) Unit
+foreign import setFileDetector :: forall e. Driver -> FileDetector -> Aff (selenium :: SELENIUM|e) Unit 
 
 foreign import navigateBack :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
 foreign import navigateForward :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
 foreign import refresh :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
-foreign import to :: forall e. String -> Driver -> Aff (selenium :: SELENIUM|e) Unit
+foreign import navigateTo :: forall e. String -> Driver -> Aff (selenium :: SELENIUM|e) Unit
 foreign import getCurrentUrl :: forall e. Driver -> Aff (selenium :: SELENIUM|e) String
 foreign import getTitle :: forall e. Driver -> Aff (selenium :: SELENIUM|e) String
 -- | Executes javascript script from `String` argument.
