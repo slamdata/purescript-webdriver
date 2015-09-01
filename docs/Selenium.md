@@ -73,6 +73,18 @@ affLocator \el -> do
   foldFn a _ = a
 ```
 
+#### `findExact`
+
+``` purescript
+findExact :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM | e) Element
+```
+
+#### `childExact`
+
+``` purescript
+childExact :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM | e) Element
+```
+
 #### `findElement`
 
 ``` purescript
@@ -109,7 +121,7 @@ Same as `findElements` but starts searching from custom element
 #### `setFileDetector`
 
 ``` purescript
-setFileDetector :: forall e. Driver -> FileDetector -> Eff (selenium :: SELENIUM | e) Unit
+setFileDetector :: forall e. Driver -> FileDetector -> Aff (selenium :: SELENIUM | e) Unit
 ```
 
 #### `navigateBack`
@@ -130,10 +142,10 @@ navigateForward :: forall e. Driver -> Aff (selenium :: SELENIUM | e) Unit
 refresh :: forall e. Driver -> Aff (selenium :: SELENIUM | e) Unit
 ```
 
-#### `to`
+#### `navigateTo`
 
 ``` purescript
-to :: forall e. String -> Driver -> Aff (selenium :: SELENIUM | e) Unit
+navigateTo :: forall e. String -> Driver -> Aff (selenium :: SELENIUM | e) Unit
 ```
 
 #### `getCurrentUrl`

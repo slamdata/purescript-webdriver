@@ -13,8 +13,13 @@ exports.get = function(driver) {
 
 exports.setFileDetector = function(driver) {
     return function(detector) {
-        return function () {
-          driver.setFileDetector(detector);
+        return function (cb, eb) {
+            try {
+                driver.setFileDetector(detector);
+                return cb();
+            } catch (e) {
+                return eb(e);
+            }
         };
     };
 };
@@ -125,6 +130,29 @@ function _find(nothing) {
     };
 }
 
+function _exact(driver) {
+    return function(by) {
+        return function(cb, eb) {
+            driver.isElementPresent(by)
+                .then(function(is) {
+                    if (is) {
+                        var el = driver.findElement(by);
+                        return cb(el);
+                    } else {
+                        return eb(new Error("element is not present"));
+                    }
+                })
+                .thenCatch(function(e) {
+                    return eb(e);
+                });
+                    
+        };
+    };
+}
+
+exports.findExact = _exact;
+exports.childExact = _exact;
+
 exports._findElement = _find;
 
 exports._findChild = _find;
@@ -223,7 +251,7 @@ exports.refresh = function(driver) {
     };
 };
 
-exports.to = function(url) {
+exports.naviagateTo = function(url) {
     return function(driver) {
         return function(cb, eb) {
             var n = new webdriver.WebDriver.Navigation(driver);

@@ -114,6 +114,46 @@ data Capabilities :: *
 data FileDetector :: *
 ```
 
+#### `Method`
+
+``` purescript
+data Method
+  = DELETE
+  | GET
+  | HEAD
+  | OPTIONS
+  | PATCH
+  | POST
+  | PUT
+  | MOVE
+  | COPY
+  | CustomMethod String
+```
+
+Copied from `purescript-affjax` because the only thing we
+need from `affjax` is `Method`                    
+
+##### Instances
+``` purescript
+instance eqMethod :: Eq Method
+instance methodIsForeign :: IsForeign Method
+```
+
+#### `XHRState`
+
+``` purescript
+data XHRState
+  = Stale
+  | Opened
+  | Loaded
+```
+
+##### Instances
+``` purescript
+instance xhrStateEq :: Eq XHRState
+instance xhrStateIsForeign :: IsForeign XHRState
+```
+
 #### `Location`
 
 ``` purescript
@@ -125,6 +165,12 @@ type Location = { x :: Number, y :: Number }
 ``` purescript
 newtype ControlKey
   = ControlKey String
+```
+
+#### `XHRStats`
+
+``` purescript
+type XHRStats = { method :: Method, url :: String, async :: Boolean, user :: Maybe String, password :: Maybe String, state :: XHRState }
 ```
 
 
