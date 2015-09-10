@@ -118,6 +118,9 @@ getCssValue el key = lift $ S.getCssValue el key
 getAttribute :: forall e o. Element -> String -> Selenium e o String
 getAttribute el attr = lift $ S.getAttribute el attr
 
+getText :: forall e o. Element -> Selenium e o String
+getText el = lift $ S.getText el
+
 clearEl :: forall e o. Element -> Selenium e o Unit
 clearEl = lift <<< S.clearEl
 
