@@ -5,8 +5,13 @@
     "type": "git",
     "url": "https://github.com/slamdata/purescript-webdriver.git"
   },
-  "author": "Maxim Zimaliev <zimaliev@gmail.com>",
+  "license": "Apache-2.0",
+  "authors": [
+    "Maxim Zimaliev <zimaliev@gmail.com>",
+    "Jon Sterling <jon@jonmsterling.com>"
+  ],
   "scripts": {
+    "build": "npm install && gulp make-example",
     "example": "npm install && gulp make-example && node example/main.js"
   },
   "dependencies": {
