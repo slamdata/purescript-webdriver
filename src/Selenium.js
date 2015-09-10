@@ -202,6 +202,12 @@ exports.getAttribute = function(el) {
     };
 };
 
+exports.getText = function(el) {
+    return function(cb, eb) {
+        return el.getText().then(cb).thenCatch(eb);
+    };
+};
+
 exports.isDisplayed = function(el) {
     return function(cb, eb) {
         return el.isDisplayed().then(function(is) {

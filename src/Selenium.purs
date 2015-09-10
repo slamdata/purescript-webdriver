@@ -24,6 +24,7 @@ module Selenium
        , clickEl
        , getCssValue
        , getAttribute
+       , getText
        , getTitle
        , isDisplayed
        , isEnabled
@@ -120,6 +121,7 @@ foreign import sendKeysEl :: forall e. String -> Element -> Aff (selenium :: SEL
 foreign import clickEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
 foreign import getCssValue :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) String
 foreign import getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) String
+foreign import getText :: forall e. Element -> Aff (selenium :: SELENIUM|e) String
 foreign import isDisplayed :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import isEnabled :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM|e) String
