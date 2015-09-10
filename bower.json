@@ -6,7 +6,8 @@
   },
   "homepage": "https://github.com/slamdata/purescript-webdriver",
   "authors": [
-    "Maxim Zimaliev <zimaliev@yandex.ru>"
+    "Maxim Zimaliev <zimaliev@yandex.ru>",
+    "Jon Sterling <jon@jonmsterling.com>"
   ],
   "description": "A PureScript interface to Selenium's Node Webdriver",
   "keywords": [
@@ -14,7 +15,7 @@
     "webdriver",
     "selenium"
   ],
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "purescript-base": "^0.1.0",
     "purescript-aff": "^0.11.3",

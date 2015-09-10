@@ -158,6 +158,12 @@ getCssValue :: forall e o. Element -> String -> Selenium e o String
 getAttribute :: forall e o. Element -> String -> Selenium e o String
 ```
 
+#### `getText`
+
+``` purescript
+getText :: forall e o. Element -> Selenium e o String
+```
+
 #### `clearEl`
 
 ``` purescript

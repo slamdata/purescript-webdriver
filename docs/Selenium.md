@@ -192,6 +192,12 @@ getCssValue :: forall e. Element -> String -> Aff (selenium :: SELENIUM | e) Str
 getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM | e) String
 ```
 
+#### `getText`
+
+``` purescript
+getText :: forall e. Element -> Aff (selenium :: SELENIUM | e) String
+```
+
 #### `isDisplayed`
 
 ``` purescript
