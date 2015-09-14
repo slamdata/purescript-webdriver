@@ -111,19 +111,11 @@ function _find(nothing) {
         return function(driver) {
             return function(by) {
                 return function(cb) {
-                    driver.isElementPresent(by)
-                        .then(function(is) {
-                            if (is) {
-                                var el = driver.findElement(by);
-                                return cb(just(el));
-                            } else {
-                                return cb(nothing);
-                            }
-                        })
-                        .thenCatch(function() {
-                            return cb(nothing);
-                        });
-
+                    driver.findElement(by).then(function(el) {
+                        return cb(just(el));
+                    }).thenCatch(function() {
+                        return cb(nothing);
+                    });
                 };
             };
         };
@@ -133,20 +125,7 @@ function _find(nothing) {
 function _exact(driver) {
     return function(by) {
         return function(cb, eb) {
-            driver.isElementPresent(by)
-                .then(function(is) {
-                    if (is) {
-                        var el = driver.findElement(by);
-                        return cb(el);
-                    } else {
-                        var error = "couldn't find element using locator " + by.toString();
-                        return eb(new Error(error));
-                    }
-                })
-                .thenCatch(function(e) {
-                    return eb(e);
-                });
-
+            driver.findElement(by).then(cb).thenCatch(eb);
         };
     };
 }
