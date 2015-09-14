@@ -139,13 +139,14 @@ function _exact(driver) {
                         var el = driver.findElement(by);
                         return cb(el);
                     } else {
-                        return eb(new Error("element is not present"));
+                        var error = "couldn't find element using locator " + by.toString();
+                        return eb(new Error(error));
                     }
                 })
                 .thenCatch(function(e) {
                     return eb(e);
                 });
-                    
+
         };
     };
 }
