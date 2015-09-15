@@ -216,6 +216,18 @@ isEnabled :: forall e. Element -> Aff (selenium :: SELENIUM | e) Boolean
 getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM | e) String
 ```
 
+#### `getSize`
+
+``` purescript
+getSize :: forall e. Element -> Aff (selenium :: SELENIUM | e) Size
+```
+
+#### `getLocation`
+
+``` purescript
+getLocation :: forall e. Element -> Aff (selenium :: SELENIUM | e) Location
+```
+
 #### `clearEl`
 
 ``` purescript
@@ -234,5 +246,55 @@ takeScreenshot :: forall e. Driver -> Aff (selenium :: SELENIUM | e) String
 ```
 
 Returns png base64 encoded png image
+
+#### `saveScreenshot`
+
+``` purescript
+saveScreenshot :: forall e. String -> Driver -> Aff (selenium :: SELENIUM | e) Unit
+```
+
+Saves screenshot to path
+
+#### `getWindow`
+
+``` purescript
+getWindow :: forall e. Driver -> Aff (selenium :: SELENIUM | e) Window
+```
+
+#### `getWindowPosition`
+
+``` purescript
+getWindowPosition :: forall e. Window -> Aff (selenium :: SELENIUM | e) Location
+```
+
+#### `getWindowSize`
+
+``` purescript
+getWindowSize :: forall e. Window -> Aff (selenium :: SELENIUM | e) Size
+```
+
+#### `maximizeWindow`
+
+``` purescript
+maximizeWindow :: forall e. Window -> Aff (selenium :: SELENIUM | e) Unit
+```
+
+#### `setWindowPosition`
+
+``` purescript
+setWindowPosition :: forall e. Location -> Window -> Aff (selenium :: SELENIUM | e) Unit
+```
+
+#### `setWindowSize`
+
+``` purescript
+setWindowSize :: forall e. Size -> Window -> Aff (selenium :: SELENIUM | e) Unit
+```
+
+#### `getWindowScroll`
+
+``` purescript
+getWindowScroll :: forall e. Driver -> Aff (selenium :: SELENIUM | e) Location
+```
 
 

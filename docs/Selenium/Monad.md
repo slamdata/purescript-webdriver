@@ -22,6 +22,48 @@ getDriver :: forall e o. Selenium e o Driver
 
 get driver from context
 
+#### `getWindow`
+
+``` purescript
+getWindow :: forall e o. Selenium e o Window
+```
+
+#### `getWindowPosition`
+
+``` purescript
+getWindowPosition :: forall e o. Selenium e o Location
+```
+
+#### `getWindowSize`
+
+``` purescript
+getWindowSize :: forall e o. Selenium e o Size
+```
+
+#### `maximizeWindow`
+
+``` purescript
+maximizeWindow :: forall e o. Selenium e o Unit
+```
+
+#### `setWindowPosition`
+
+``` purescript
+setWindowPosition :: forall e o. Location -> Selenium e o Unit
+```
+
+#### `setWindowSize`
+
+``` purescript
+setWindowSize :: forall e o. Size -> Selenium e o Unit
+```
+
+#### `getWindowScroll`
+
+``` purescript
+getWindowScroll :: forall e o. Selenium e o Location
+```
+
 #### `apathize`
 
 ``` purescript
@@ -90,14 +132,14 @@ locator :: forall e o. (Element -> Selenium e o Element) -> Selenium e o Locator
 
 get element by action returning an element
 ```purescript
-locator \el -> do 
-  commonElements <- byCss ".common-element" >>= findElements el 
+locator \el -> do
+  commonElements <- byCss ".common-element" >>= findElements el
   flaggedElements <- traverse (\el -> Tuple el <$> isVisible el) commonElements
   maybe err pure $ foldl foldFn Nothing flaggedElements
   where
   err = throwError $ error "all common elements are not visible"
   foldFn Nothing (Tuple el true) = Just el
-  foldFn a _ = a 
+  foldFn a _ = a
 ```
 
 #### `findElement`
@@ -106,7 +148,7 @@ locator \el -> do
 findElement :: forall e o. Locator -> Selenium e o (Maybe Element)
 ```
 
-Tries to find element and return it wrapped in `Just` 
+Tries to find element and return it wrapped in `Just`
 
 #### `findElements`
 
@@ -132,6 +174,18 @@ findChildren :: forall e o. Element -> Locator -> Selenium e o (List Element)
 
 ``` purescript
 getInnerHtml :: forall e o. Element -> Selenium e o String
+```
+
+#### `getSize`
+
+``` purescript
+getSize :: forall e o. Element -> Selenium e o Size
+```
+
+#### `getLocation`
+
+``` purescript
+getLocation :: forall e o. Element -> Selenium e o Location
 ```
 
 #### `isDisplayed`
@@ -224,7 +278,7 @@ getTitle :: forall e o. Selenium e o String
 sequence :: forall e o. Sequence Unit -> Selenium e o Unit
 ```
 
-Run sequence of actions 
+Run sequence of actions
 
 #### `actions`
 
@@ -258,6 +312,12 @@ quit :: forall e o. Selenium e o Unit
 
 ``` purescript
 takeScreenshot :: forall e o. Selenium e o String
+```
+
+#### `saveScreenshot`
+
+``` purescript
+saveScreenshot :: forall e o. String -> Selenium e o Unit
 ```
 
 #### `findExact`

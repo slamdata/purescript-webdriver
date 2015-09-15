@@ -1,7 +1,9 @@
 // module Selenium
 
 var webdriver = require("selenium-webdriver"),
-    By = webdriver.By;
+    By = webdriver.By,
+    fs = require("fs"),
+    path = require("path");
 
 exports.get = function(driver) {
     return function(url) {
@@ -253,6 +255,18 @@ exports.getInnerHtml = function(el) {
     };
 };
 
+exports.getSize = function(el) {
+    return function(cb, eb) {
+        el.getSize().then(cb).thenCatch(eb);
+    };
+};
+
+exports.getLocation = function(el) {
+    return function(cb, eb) {
+        el.getLocation().then(cb).thenCatch(eb);
+    };
+};
+
 function execute(driver) {
     return function(action) {
         return function(cb, eb) {
@@ -282,5 +296,94 @@ exports.takeScreenshot = function(driver) {
         driver.takeScreenshot()
             .then(cb)
             .thenCatch(eb);
+    };
+};
+
+
+exports.saveScreenshot = function(fileName) {
+    return function(driver) {
+        return function(cb, eb) {
+            driver.takeScreenshot()
+                .then(function(str) {
+                    fs.writeFile(path.resolve(fileName),
+                                 str.replace(/^data:image\/png;base64,/,""),
+                                 {
+                                     encoding: "base64",
+                                     flag: "w+"
+                                 },
+                                 function(err) {
+                                     if (err) return eb(err);
+                                     return cb();
+                                 });
+                })
+                .thenCatch(eb);
+        };
+    };
+};
+
+
+exports.getWindow = function(window) {
+    return function(cb, eb) {
+        try {
+            return cb(window.manage().window());
+        }
+        catch (e) {
+            return eb(e);
+        }
+    };
+};
+
+exports.getWindowPosition = function(window) {
+    return function(cb, eb) {
+        return window.getPosition()
+            .then(cb)
+            .thenCatch(eb);
+    };
+};
+
+exports.getWindowSize = function(window) {
+    return function(cb, eb) {
+        return window.getSize()
+            .then(cb)
+            .thenCatch(eb);
+    };
+};
+
+exports.maximizeWindow = function(window) {
+    return function(cb, eb) {
+        return window.maximize()
+            .then(cb)
+            .thenCatch(eb);
+    };
+};
+
+exports.setWindowPosition = function(loc) {
+    return function(window) {
+        return function(cb, eb) {
+            return window.setPosition(loc.x, loc.y)
+                .then(cb)
+                .thenCatch(eb);
+        };
+    };
+};
+
+exports.setWindowSize = function(size) {
+    return function(window) {
+        return function(cb, eb) {
+            return window.setSize(size.width, size.height)
+                .then(cb)
+                .thenCatch(eb);
+        };
+    };
+};
+
+exports.getWindowScroll = function(driver) {
+    return function(cb, eb) {
+        driver.executeScript(function() {
+            return {
+                x: window.scrollX,
+                y: window.scrollY
+            };
+        }).then(cb).thenCatch(eb);
     };
 };

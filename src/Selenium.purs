@@ -29,9 +29,19 @@ module Selenium
        , isDisplayed
        , isEnabled
        , getInnerHtml
+       , getSize
+       , getLocation
        , clearEl
        , setFileDetector
        , takeScreenshot
+       , saveScreenshot
+       , setWindowSize
+       , getWindowSize
+       , maximizeWindow
+       , setWindowPosition
+       , getWindowPosition
+       , getWindow
+       , getWindowScroll
        ) where
 
 import Prelude
@@ -84,7 +94,7 @@ foreign import _findChild :: forall e a. Maybe a -> (a -> Maybe a) ->
                              Element -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
 foreign import _findElements :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Array Element)
 foreign import _findChildren :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) (Array Element)
-foreign import findExact :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) Element 
+foreign import findExact :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) Element
 foreign import childExact :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) Element
 
 -- | Tries to find an element starting from `document` will return `Nothing` if there
@@ -106,7 +116,7 @@ findChildren :: forall e f. (Unfoldable f) => Element -> Locator -> Aff (seleniu
 findChildren el locator =
   unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs) <$> (_findChildren el locator)
 
-foreign import setFileDetector :: forall e. Driver -> FileDetector -> Aff (selenium :: SELENIUM|e) Unit 
+foreign import setFileDetector :: forall e. Driver -> FileDetector -> Aff (selenium :: SELENIUM|e) Unit
 
 foreign import navigateBack :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
 foreign import navigateForward :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
@@ -125,6 +135,8 @@ foreign import getText :: forall e. Element -> Aff (selenium :: SELENIUM|e) Stri
 foreign import isDisplayed :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import isEnabled :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import getInnerHtml :: forall e. Element -> Aff (selenium :: SELENIUM|e) String
+foreign import getSize :: forall e. Element -> Aff (selenium :: SELENIUM|e) Size
+foreign import getLocation :: forall e. Element -> Aff (selenium :: SELENIUM|e) Location
 -- | Clear `value` of element, if it has no value will do nothing.
 -- | If `value` is weakly referenced by `virtual-dom` (`purescript-halogen`)
 -- | will not work -- to clear such inputs one should use direct signal from
@@ -134,3 +146,19 @@ foreign import clearEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
 -- | Returns png base64 encoded png image
 foreign import takeScreenshot :: forall e. Driver -> Aff (selenium :: SELENIUM |e) String
 
+-- | Saves screenshot to path
+foreign import saveScreenshot :: forall e. String -> Driver -> Aff (selenium :: SELENIUM |e) Unit
+
+foreign import getWindow :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Window
+
+foreign import getWindowPosition :: forall e. Window -> Aff (selenium :: SELENIUM|e) Location
+
+foreign import getWindowSize :: forall e. Window -> Aff (selenium :: SELENIUM|e) Size
+
+foreign import maximizeWindow :: forall e. Window -> Aff (selenium :: SELENIUM|e) Unit
+
+foreign import setWindowPosition :: forall e. Location -> Window -> Aff (selenium :: SELENIUM|e) Unit
+
+foreign import setWindowSize :: forall e. Size -> Window -> Aff (selenium :: SELENIUM|e) Unit
+
+foreign import getWindowScroll :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Location

@@ -20,19 +20,39 @@ import Control.Monad.Reader.Class
 import qualified Control.Monad.Aff as A
 import qualified Selenium as S
 import qualified Selenium.ActionSequence as S
-import qualified Selenium.XHR as S 
+import qualified Selenium.XHR as S
 -- | `Driver` is field of `ReaderT` context
 -- | Usually selenium tests are run with tons of configs (i.e. xpath locators,
 -- | timeouts) all those configs can be putted to `Selenium e o a`
-type Selenium e o a = 
+type Selenium e o a =
   ReaderT
-    {driver :: Driver |o} 
+    {driver :: Driver |o}
     (A.Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM |e)) a
 
 -- | get driver from context
-getDriver :: forall e o. Selenium e o Driver 
+getDriver :: forall e o. Selenium e o Driver
 getDriver = _.driver <$> ask
 
+getWindow :: forall e o. Selenium e o Window
+getWindow = getDriver >>= lift <<< S.getWindow
+
+getWindowPosition :: forall e o. Selenium e o Location
+getWindowPosition = getWindow >>= lift <<< S.getWindowPosition
+
+getWindowSize :: forall e o. Selenium e o Size
+getWindowSize = getWindow >>= lift <<< S.getWindowSize
+
+maximizeWindow :: forall e o. Selenium e o Unit
+maximizeWindow = getWindow >>= lift <<< S.maximizeWindow
+
+setWindowPosition :: forall e o. Location -> Selenium e o Unit
+setWindowPosition pos = getWindow >>= S.setWindowPosition pos >>> lift
+
+setWindowSize :: forall e o. Size -> Selenium e o Unit
+setWindowSize size = getWindow >>= S.setWindowSize size >>> lift
+
+getWindowScroll :: forall e o. Selenium e o Location
+getWindowScroll = getDriver >>= S.getWindowScroll >>> lift
 
 -- LIFT `Aff` combinators to `Selenium.Monad`
 apathize :: forall e o a. Selenium e o a -> Selenium e o Unit
@@ -50,7 +70,7 @@ later time check = ReaderT \r ->
 
 -- LIFT `Selenium` funcs to `Selenium.Monad`
 get :: forall e o. String -> Selenium e o Unit
-get url = 
+get url =
   getDriver >>= lift <<< flip S.get url
 
 wait :: forall e o. Selenium e o Boolean -> Int -> Selenium e o Unit
@@ -74,26 +94,26 @@ byClassName = lift <<< S.byClassName
 
 -- | get element by action returning an element
 -- | ```purescript
--- | locator \el -> do 
--- |   commonElements <- byCss ".common-element" >>= findElements el 
+-- | locator \el -> do
+-- |   commonElements <- byCss ".common-element" >>= findElements el
 -- |   flaggedElements <- traverse (\el -> Tuple el <$> isVisible el) commonElements
 -- |   maybe err pure $ foldl foldFn Nothing flaggedElements
 -- |   where
 -- |   err = throwError $ error "all common elements are not visible"
 -- |   foldFn Nothing (Tuple el true) = Just el
--- |   foldFn a _ = a 
+-- |   foldFn a _ = a
 -- | ```
 locator :: forall e o. (Element -> Selenium e o Element) -> Selenium e o Locator
 locator checkFn = ReaderT \r ->
   S.affLocator (\el -> runReaderT (checkFn el) r)
 
--- | Tries to find element and return it wrapped in `Just` 
-findElement :: forall e o. Locator -> Selenium e o (Maybe Element) 
+-- | Tries to find element and return it wrapped in `Just`
+findElement :: forall e o. Locator -> Selenium e o (Maybe Element)
 findElement locator =
   getDriver >>= lift <<< flip S.findElement locator
 
 findElements :: forall e o. Locator -> Selenium e o (List Element)
-findElements locator = 
+findElements locator =
   getDriver >>= lift <<< flip S.findElements locator
 
 -- | Tries to find child and return it wrapped in `Just`
@@ -105,6 +125,12 @@ findChildren el loc = lift $ S.findChildren el loc
 
 getInnerHtml :: forall e o. Element -> Selenium e o String
 getInnerHtml = lift <<< S.getInnerHtml
+
+getSize :: forall e o. Element -> Selenium e o Size
+getSize = lift <<< S.getSize
+
+getLocation :: forall e o. Element -> Selenium e o Location
+getLocation = lift <<< S.getLocation
 
 isDisplayed :: forall e o. Element -> Selenium e o Boolean
 isDisplayed = lift <<< S.isDisplayed
@@ -150,14 +176,14 @@ getTitle :: forall e o. Selenium e o String
 getTitle = getDriver >>= S.getTitle >>> lift
 
 
--- | Run sequence of actions 
+-- | Run sequence of actions
 sequence :: forall e o. S.Sequence Unit -> Selenium e o Unit
 sequence seq = do
   getDriver >>= lift <<< flip S.sequence seq
 
 -- | Same as `sequence` but takes function of `ReaderT` as an argument
-actions :: forall e o. ({driver :: Driver |o} -> S.Sequence Unit) -> Selenium e o Unit 
-actions seqFn = do 
+actions :: forall e o. ({driver :: Driver |o} -> S.Sequence Unit) -> Selenium e o Unit
+actions seqFn = do
   ctx <- ask
   sequence $ seqFn ctx
 
@@ -166,7 +192,7 @@ stop :: forall e o. Selenium e o Unit
 stop = wait (later top $ pure false) top
 
 refresh :: forall e o. Selenium e o Unit
-refresh = getDriver >>= S.refresh >>> lift 
+refresh = getDriver >>= S.refresh >>> lift
 
 quit :: forall e o. Selenium e o Unit
 quit = getDriver >>= S.quit >>> lift
@@ -174,16 +200,19 @@ quit = getDriver >>= S.quit >>> lift
 takeScreenshot :: forall e o. Selenium e o String
 takeScreenshot = getDriver >>= S.takeScreenshot >>> lift
 
+saveScreenshot :: forall e o. String -> Selenium e o Unit
+saveScreenshot name = getDriver >>= S.saveScreenshot name >>> lift
+
 -- | Tries to find element, if has no success throws an error
 findExact :: forall e o. Locator -> Selenium e o Element
-findExact loc = getDriver >>= flip S.findExact loc >>> lift 
+findExact loc = getDriver >>= flip S.findExact loc >>> lift
 
 -- | Tries to find child, if has no success throws an error
 childExact :: forall e o. Element -> Locator -> Selenium e o Element
-childExact el loc = lift $ S.childExact el loc 
+childExact el loc = lift $ S.childExact el loc
 
 startSpying :: forall e o. Selenium e o Unit
-startSpying = getDriver >>= S.startSpying >>> lift 
+startSpying = getDriver >>= S.startSpying >>> lift
 
 stopSpying :: forall e o. Selenium e o Unit
 stopSpying = getDriver >>= S.stopSpying >>> lift

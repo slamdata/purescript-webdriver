@@ -10,6 +10,7 @@ import Data.Maybe (Maybe())
 foreign import data Builder :: *
 foreign import data SELENIUM :: !
 foreign import data Driver :: *
+foreign import data Window :: *
 foreign import data Until :: *
 foreign import data Element :: *
 foreign import data Locator :: *
@@ -28,7 +29,7 @@ foreign import data Capabilities :: *
 foreign import data FileDetector :: *
 
 -- | Copied from `purescript-affjax` because the only thing we
--- | need from `affjax` is `Method`                    
+-- | need from `affjax` is `Method`
 data Method
   = DELETE
   | GET
@@ -52,8 +53,8 @@ instance eqMethod :: Eq Method where
   eq MOVE MOVE = true
   eq COPY COPY = true
   eq (CustomMethod a) (CustomMethod b) = a == b
-  eq _ _ = false 
-  
+  eq _ _ = false
+
 
 instance methodIsForeign :: IsForeign Method where
   read f = do
@@ -68,7 +69,7 @@ instance methodIsForeign :: IsForeign Method where
       "put" -> PUT
       "move" -> MOVE
       "copy" -> COPY
-      a -> CustomMethod a 
+      a -> CustomMethod a
 
 data XHRState
   = Stale
@@ -87,24 +88,28 @@ instance xhrStateIsForeign :: IsForeign XHRState where
     case str of
       "stale" -> pure Stale
       "opened" -> pure Opened
-      "loaded" -> pure Loaded 
+      "loaded" -> pure Loaded
       _ -> Left $ TypeMismatch "xhr state" "string"
 
-    
+
 
 type Location =
-  { x :: Number
-  , y :: Number
+  { x :: Int
+  , y :: Int
   }
 
+type Size =
+  { width :: Int
+  , height :: Int
+  }
 newtype ControlKey = ControlKey String
 
 
 type XHRStats =
-  { method :: Method 
+  { method :: Method
   , url :: String
   , async :: Boolean
   , user :: Maybe String
   , password :: Maybe String
   , state :: XHRState
-  } 
+  }

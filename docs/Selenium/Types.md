@@ -18,6 +18,12 @@ data SELENIUM :: !
 data Driver :: *
 ```
 
+#### `Window`
+
+``` purescript
+data Window :: *
+```
+
 #### `Until`
 
 ``` purescript
@@ -131,7 +137,7 @@ data Method
 ```
 
 Copied from `purescript-affjax` because the only thing we
-need from `affjax` is `Method`                    
+need from `affjax` is `Method`
 
 ##### Instances
 ``` purescript
@@ -157,7 +163,13 @@ instance xhrStateIsForeign :: IsForeign XHRState
 #### `Location`
 
 ``` purescript
-type Location = { x :: Number, y :: Number }
+type Location = { x :: Int, y :: Int }
+```
+
+#### `Size`
+
+``` purescript
+type Size = { width :: Int, height :: Int }
 ```
 
 #### `ControlKey`
