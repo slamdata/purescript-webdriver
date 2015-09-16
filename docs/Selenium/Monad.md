@@ -7,7 +7,7 @@ putting `Driver` to `ReaderT`
 #### `Selenium`
 
 ``` purescript
-type Selenium e o a = ReaderT { driver :: Driver | o } (Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM | e)) a
+type Selenium e o a = ReaderT { driver :: Driver, defaultTimeout :: Int | o } (Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM, ref :: REF | e)) a
 ```
 
 `Driver` is field of `ReaderT` context
@@ -93,6 +93,22 @@ get :: forall e o. String -> Selenium e o Unit
 ``` purescript
 wait :: forall e o. Selenium e o Boolean -> Int -> Selenium e o Unit
 ```
+
+#### `tryRepeatedlyTo'`
+
+``` purescript
+tryRepeatedlyTo' :: forall a e o. Int -> Selenium e o a -> Selenium e o a
+```
+
+Tries the provided Selenium computation repeatedly until the provided timeout expires
+
+#### `tryRepeatedlyTo`
+
+``` purescript
+tryRepeatedlyTo :: forall a e o. Selenium e o a -> Selenium e o a
+```
+
+Tries the provided Selenium computation repeatedly until `Selenium`'s defaultTimeout expires
 
 #### `byCss`
 
@@ -283,7 +299,7 @@ Run sequence of actions
 #### `actions`
 
 ``` purescript
-actions :: forall e o. ({ driver :: Driver | o } -> Sequence Unit) -> Selenium e o Unit
+actions :: forall e o. ({ driver :: Driver, defaultTimeout :: Int | o } -> Sequence Unit) -> Selenium e o Unit
 ```
 
 Same as `sequence` but takes function of `ReaderT` as an argument

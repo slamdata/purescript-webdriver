@@ -14,10 +14,12 @@ import Data.List
 import DOM
 import Selenium.Types
 import Control.Monad.Eff.Console (CONSOLE())
+import Control.Monad.Eff.Ref (REF())
 import Control.Monad.Trans
 import Control.Monad.Reader.Trans
 import Control.Monad.Reader.Class
 import qualified Control.Monad.Aff as A
+import qualified Control.Monad.Aff.Reattempt as A
 import qualified Selenium as S
 import qualified Selenium.ActionSequence as S
 import qualified Selenium.XHR as S
@@ -26,8 +28,8 @@ import qualified Selenium.XHR as S
 -- | timeouts) all those configs can be putted to `Selenium e o a`
 type Selenium e o a =
   ReaderT
-    {driver :: Driver |o}
-    (A.Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM |e)) a
+    {driver :: Driver, defaultTimeout :: Int |o}
+    (A.Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM, ref :: REF |e)) a
 
 -- | get driver from context
 getDriver :: forall e o. Selenium e o Driver
@@ -76,6 +78,15 @@ get url =
 wait :: forall e o. Selenium e o Boolean -> Int -> Selenium e o Unit
 wait check time = ReaderT \r ->
   S.wait (runReaderT check r) time r.driver
+
+-- | Tries the provided Selenium computation repeatedly until the provided timeout expires
+tryRepeatedlyTo' :: forall a e o. Int -> Selenium e o a -> Selenium e o a
+tryRepeatedlyTo' time selenium = ReaderT \r ->
+  A.reattempt time (runReaderT selenium r)
+
+-- | Tries the provided Selenium computation repeatedly until `Selenium`'s defaultTimeout expires
+tryRepeatedlyTo :: forall a e o. Selenium e o a -> Selenium e o a
+tryRepeatedlyTo selenium = ask >>= \r -> tryRepeatedlyTo' r.defaultTimeout selenium
 
 byCss :: forall e o. String -> Selenium e o Locator
 byCss = lift <<< S.byCss
@@ -182,7 +193,7 @@ sequence seq = do
   getDriver >>= lift <<< flip S.sequence seq
 
 -- | Same as `sequence` but takes function of `ReaderT` as an argument
-actions :: forall e o. ({driver :: Driver |o} -> S.Sequence Unit) -> Selenium e o Unit
+actions :: forall e o. ({driver :: Driver, defaultTimeout :: Int |o} -> S.Sequence Unit) -> Selenium e o Unit
 actions seqFn = do
   ctx <- ask
   sequence $ seqFn ctx
