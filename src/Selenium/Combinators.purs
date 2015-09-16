@@ -59,23 +59,6 @@ contra check = do
     (const $ pure unit)
     (const $ throwError $ error "check successed in contra") eR 
 
--- | takes value and repeatedly tries to evaluate it for timeout of ms (second arg)
--- | if it evaluates w/o error returns its value
--- | else throws error 
-waiter :: forall e o a. Selenium e o a -> Int -> Selenium e o a
-waiter getter timeout = do
-  wait (checker $ (isRight <$> attempt getter)) timeout
-  getter
-
-waitExistentCss :: forall e o. String -> Int -> Selenium e o Element
-waitExistentCss css timeout =
-  waiter (getElementByCss css) timeout
-
-waitNotExistentCss :: forall e o. String -> Int -> Selenium e o Unit
-waitNotExistentCss css timeout =
-  waiter (checkNotExistsByCss css) timeout
-
-
 -- | Repeatedly tries to evaluate check (third arg) for timeout ms (first arg)
 -- | finishes when check evaluates to true.
 -- | If there is an error during check or it constantly returns `false`
@@ -86,7 +69,6 @@ await timeout check = do
   case ei of
     Left _ -> throwError $ error "await has no success"
     Right _ -> pure unit 
-
 
 awaitUrlChanged :: forall e o. String -> Selenium e o Boolean
 awaitUrlChanged oldURL = checker $ (oldURL /=) <$> getCurrentUrl 
