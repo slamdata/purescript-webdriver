@@ -63,6 +63,7 @@ foreign import get :: forall e. Driver -> String -> Aff (selenium :: SELENIUM|e)
 foreign import wait :: forall e. Aff (selenium :: SELENIUM|e) Boolean ->
                                  Int -> Driver ->
                                  Aff (selenium :: SELENIUM|e) Unit
+
 -- | Finalizer
 foreign import quit :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
 
