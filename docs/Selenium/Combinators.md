@@ -46,27 +46,23 @@ checkNotExistsByCss :: forall e o. String -> Selenium e o Unit
 contra :: forall e o a. Selenium e o a -> Selenium e o Unit
 ```
 
-#### `waiter`
+#### `tryToFind'`
 
 ``` purescript
-waiter :: forall e o a. Selenium e o a -> Int -> Selenium e o a
+tryToFind' :: forall e o. Int -> Selenium e o Locator -> Selenium e o Element
 ```
 
-takes value and repeatedly tries to evaluate it for timeout of ms (second arg)
-if it evaluates w/o error returns its value
-else throws error 
+Repeatedly attempts to find an element using the provided selector until the
+provided timeout elapses.
 
-#### `waitExistentCss`
+#### `tryToFind`
 
 ``` purescript
-waitExistentCss :: forall e o. String -> Int -> Selenium e o Element
+tryToFind :: forall e o. Selenium e o Locator -> Selenium e o Element
 ```
 
-#### `waitNotExistentCss`
-
-``` purescript
-waitNotExistentCss :: forall e o. String -> Int -> Selenium e o Unit
-```
+Repeatedly tries to find an element using the provided selector until
+the provided `Selenium`'s `defaultTimeout` elapses.
 
 #### `await`
 

@@ -59,6 +59,16 @@ contra check = do
     (const $ pure unit)
     (const $ throwError $ error "check successed in contra") eR 
 
+-- | Repeatedly attempts to find an element using the provided selector until the
+-- | provided timeout elapses.
+tryToFind' :: forall e o. Int -> Selenium e o Locator -> Selenium e o Element
+tryToFind' timeout locator = tryRepeatedlyTo' timeout $ locator >>= findExact
+
+-- | Repeatedly tries to find an element using the provided selector until
+-- | the provided `Selenium`'s `defaultTimeout` elapses.
+tryToFind :: forall e o. Selenium e o Locator -> Selenium e o Element
+tryToFind locator = tryRepeatedlyTo $ locator >>= findExact
+
 -- | Repeatedly tries to evaluate check (third arg) for timeout ms (first arg)
 -- | finishes when check evaluates to true.
 -- | If there is an error during check or it constantly returns `false`
