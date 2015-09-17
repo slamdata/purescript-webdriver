@@ -10,7 +10,6 @@ import Data.Either (Either())
 import Data.Maybe (Maybe())
 import Data.Foreign (Foreign())
 import Data.Maybe.Unsafe (fromJust)
-import Data.Either (either)
 import Data.List
 import DOM
 import Selenium.Types
