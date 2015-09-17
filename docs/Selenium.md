@@ -73,6 +73,12 @@ affLocator \el -> do
   foldFn a _ = a
 ```
 
+#### `showLocator`
+
+``` purescript
+showLocator :: Locator -> String
+```
+
 #### `findExact`
 
 ``` purescript
@@ -93,6 +99,14 @@ findElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM | e) (Ma
 
 Tries to find an element starting from `document` will return `Nothing` if there
 is no element can be found by locator
+
+#### `loseElement`
+
+``` purescript
+loseElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM | e) Unit
+```
+
+Tries to find element and throws an error if it succeeds.
 
 #### `findElements`
 

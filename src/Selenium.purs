@@ -9,10 +9,12 @@ module Selenium
        , byXPath
        , affLocator
        , findElement
+       , loseElement
        , findElements
        , findChild
        , findChildren
        , findExact
+       , showLocator
        , childExact
        , navigateBack
        , navigateForward
@@ -46,9 +48,12 @@ module Selenium
 
 import Prelude
 import Control.Monad.Eff (Eff())
+import Control.Monad.Eff.Exception (error)
+import Control.Monad.Error.Class (throwError)
 import Data.Maybe (Maybe())
+import Data.Either (either)
 import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Aff (Aff())
+import Control.Monad.Aff (Aff(), attempt)
 import Selenium.Types
 import Data.Unfoldable (Unfoldable, unfoldr)
 import Data.Foreign (Foreign())
@@ -88,6 +93,7 @@ foreign import byXPath :: forall e. String -> Aff (selenium :: SELENIUM|e) Locat
 -- | ```
 foreign import affLocator :: forall e. (Element -> Aff (selenium :: SELENIUM|e) Element) -> Aff (selenium :: SELENIUM|e) Locator
 
+foreign import showLocator :: Locator -> String
 
 foreign import _findElement :: forall e a. Maybe a -> (a -> Maybe a) ->
                                Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
@@ -102,6 +108,14 @@ foreign import childExact :: forall e. Element -> Locator -> Aff (selenium :: SE
 -- | is no element can be found by locator
 findElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
 findElement = _findElement Nothing Just
+
+-- | Tries to find element and throws an error if it succeeds.
+loseElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) Unit
+loseElement driver locator = do
+  result <- attempt $ findExact driver locator
+  either (const $ pure unit) (const $ throwError $ error failMessage) result
+    where
+    failMessage = "Found element with locator: " ++ showLocator locator
 
 -- | Finds elements by locator from `document`
 findElements :: forall e f. (Unfoldable f) => Driver -> Locator -> Aff (selenium :: SELENIUM|e) (f Element)

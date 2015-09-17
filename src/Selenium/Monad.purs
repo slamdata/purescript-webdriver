@@ -10,6 +10,7 @@ import Data.Either (Either())
 import Data.Maybe (Maybe())
 import Data.Foreign (Foreign())
 import Data.Maybe.Unsafe (fromJust)
+import Data.Either (either)
 import Data.List
 import DOM
 import Selenium.Types
@@ -217,6 +218,10 @@ saveScreenshot name = getDriver >>= S.saveScreenshot name >>> lift
 -- | Tries to find element, if has no success throws an error
 findExact :: forall e o. Locator -> Selenium e o Element
 findExact loc = getDriver >>= flip S.findExact loc >>> lift
+
+-- | Tries to find element and throws an error if it succeeds.
+loseElement :: forall e o. Locator -> Selenium e o Unit
+loseElement loc = getDriver >>= flip S.loseElement loc >>> lift
 
 -- | Tries to find child, if has no success throws an error
 childExact :: forall e o. Element -> Locator -> Selenium e o Element

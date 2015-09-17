@@ -344,6 +344,14 @@ findExact :: forall e o. Locator -> Selenium e o Element
 
 Tries to find element, if has no success throws an error
 
+#### `loseElement`
+
+``` purescript
+loseElement :: forall e o. Locator -> Selenium e o Unit
+```
+
+Tries to find element and throws an error if it succeeds.
+
 #### `childExact`
 
 ``` purescript

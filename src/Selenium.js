@@ -132,6 +132,10 @@ function _exact(driver) {
     };
 }
 
+exports.showLocator = function(locator) {
+  return locator.toString();
+}
+
 exports.findExact = _exact;
 exports.childExact = _exact;
 
