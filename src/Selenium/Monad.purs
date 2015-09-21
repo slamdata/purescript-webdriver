@@ -120,12 +120,12 @@ locator checkFn = ReaderT \r ->
 
 -- | Tries to find element and return it wrapped in `Just`
 findElement :: forall e o. Locator -> Selenium e o (Maybe Element)
-findElement locator =
-  getDriver >>= lift <<< flip S.findElement locator
+findElement l =
+  getDriver >>= lift <<< flip S.findElement l
 
 findElements :: forall e o. Locator -> Selenium e o (List Element)
-findElements locator =
-  getDriver >>= lift <<< flip S.findElements locator
+findElements l =
+  getDriver >>= lift <<< flip S.findElements l
 
 -- | Tries to find child and return it wrapped in `Just`
 findChild :: forall e o. Element -> Locator -> Selenium e o (Maybe Element)
