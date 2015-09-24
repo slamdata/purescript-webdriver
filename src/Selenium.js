@@ -243,7 +243,7 @@ exports.refresh = function(driver) {
     };
 };
 
-exports.naviagateTo = function(url) {
+exports.navigateTo = function(url) {
     return function(driver) {
         return function(cb, eb) {
             var n = new webdriver.WebDriver.Navigation(driver);
