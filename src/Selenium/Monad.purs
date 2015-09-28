@@ -26,10 +26,10 @@ import qualified Selenium.XHR as S
 -- | `Driver` is field of `ReaderT` context
 -- | Usually selenium tests are run with tons of configs (i.e. xpath locators,
 -- | timeouts) all those configs can be putted to `Selenium e o a`
-type Selenium e o a =
+type Selenium e o =
   ReaderT
     {driver :: Driver, defaultTimeout :: Int |o}
-    (A.Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM, ref :: REF |e)) a
+    (A.Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM, ref :: REF |e))
 
 -- | get driver from context
 getDriver :: forall e o. Selenium e o Driver
