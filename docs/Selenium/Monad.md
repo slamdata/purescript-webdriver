@@ -7,7 +7,7 @@ putting `Driver` to `ReaderT`
 #### `Selenium`
 
 ``` purescript
-type Selenium e o a = ReaderT { driver :: Driver, defaultTimeout :: Int | o } (Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM, ref :: REF | e)) a
+type Selenium e o = ReaderT { driver :: Driver, defaultTimeout :: Int | o } (Aff (console :: CONSOLE, selenium :: SELENIUM, dom :: DOM, ref :: REF | e))
 ```
 
 `Driver` is field of `ReaderT` context
