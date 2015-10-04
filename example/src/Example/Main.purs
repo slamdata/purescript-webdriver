@@ -3,15 +3,16 @@ module Example.Main where
 import Prelude
 import Control.Monad.Eff (Eff())
 import Control.Monad.Eff.Console (CONSOLE())
+import Control.Monad.Eff.Exception (EXCEPTION())
 import Control.Monad.Aff (Aff(), launchAff, later')
 import Control.Monad.Aff.Console (log)
 import Data.Maybe (maybe)
 import Selenium
-import Selenium.Types 
+import Selenium.Types
 import Selenium.Browser
 import Selenium.Builder
 
-main :: Eff (selenium :: SELENIUM, console :: CONSOLE) Unit
+main :: Eff (selenium :: SELENIUM, console :: CONSOLE, err :: EXCEPTION) Unit
 main = do
   launchAff do
     driver <- build $ browser FireFox
@@ -40,5 +41,5 @@ main = do
     if title == "webdriver - Google Search"
       then pure true
       else later' 50 $ titleAff driver
-    
-    
+
+

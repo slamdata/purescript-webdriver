@@ -17,7 +17,7 @@
   "dependencies": {
     "gulp": "^3.9.0",
     "gulp-purescript": "^0.5.0",
-    "purescript": "^0.7.1",
+    "purescript": "^0.7.4",
     "selenium-webdriver": "^2.46.1"
   }
 }
