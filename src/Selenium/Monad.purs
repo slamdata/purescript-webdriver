@@ -152,7 +152,7 @@ isEnabled = lift <<< S.isEnabled
 getCssValue :: forall e o. Element -> String -> Selenium e o String
 getCssValue el key = lift $ S.getCssValue el key
 
-getAttribute :: forall e o. Element -> String -> Selenium e o String
+getAttribute :: forall e o. Element -> String -> Selenium e o (Maybe String)
 getAttribute el attr = lift $ S.getAttribute el attr
 
 getText :: forall e o. Element -> Selenium e o String

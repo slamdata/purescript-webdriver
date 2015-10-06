@@ -180,10 +180,20 @@ exports.getCssValue = function(el) {
     };
 };
 
-exports.getAttribute = function(el) {
-    return function(str) {
-        return function(cb, eb) {
-            return el.getAttribute(str).then(cb).thenCatch(eb);
+exports._getAttribute = function(nothing) {
+    return function(just) {
+        return function(el) {
+            return function(str) {
+                return function(cb, eb) {
+                    return el.getAttribute(str).then(function(attr) {
+                        if (attr === null) {
+                            cb(nothing);
+                        } else {
+                            cb(just(attr));
+                        }
+                    }).thenCatch(eb);
+                };
+            };
         };
     };
 };
