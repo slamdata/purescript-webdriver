@@ -145,7 +145,14 @@ foreign import executeStr :: forall e. Driver -> String -> Aff (selenium :: SELE
 foreign import sendKeysEl :: forall e. String -> Element -> Aff (selenium :: SELENIUM|e) Unit
 foreign import clickEl :: forall e. Element -> Aff (selenium :: SELENIUM|e) Unit
 foreign import getCssValue :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) String
-foreign import getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) String
+foreign import _getAttribute :: forall e a. Maybe a -> (a -> Maybe a) ->
+                                Element -> String -> Aff (selenium :: SELENIUM|e) (Maybe String)
+
+-- | Tries to find an element starting from `document` will return `Nothing` if there
+-- | is no element can be found by locator
+getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) (Maybe String)
+getAttribute = _getAttribute Nothing Just
+
 foreign import getText :: forall e. Element -> Aff (selenium :: SELENIUM|e) String
 foreign import isDisplayed :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
 foreign import isEnabled :: forall e. Element -> Aff (selenium :: SELENIUM|e) Boolean
