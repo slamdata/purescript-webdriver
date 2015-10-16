@@ -108,16 +108,16 @@ data SafariOptions :: *
 data ScrollBehaviour :: *
 ```
 
-#### `Capabilities`
-
-``` purescript
-data Capabilities :: *
-```
-
 #### `FileDetector`
 
 ``` purescript
 data FileDetector :: *
+```
+
+#### `WindowHandle`
+
+``` purescript
+data WindowHandle :: *
 ```
 
 #### `Method`

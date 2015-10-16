@@ -44,6 +44,10 @@ module Selenium
        , getWindowPosition
        , getWindow
        , getWindowScroll
+       , getWindowHandle
+       , getAllWindowHandles
+       , switchTo
+       , close
        ) where
 
 import Prelude
@@ -104,7 +108,7 @@ foreign import _findChildren :: forall e. Element -> Locator -> Aff (selenium ::
 foreign import findExact :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) Element
 foreign import childExact :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) Element
 
--- | Tries to find an element starting from `document` will return `Nothing` if there
+-- | Tries to find an element starting from `document`; will return `Nothing` if there
 -- | is no element can be found by locator
 findElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
 findElement = _findElement Nothing Just
@@ -119,8 +123,7 @@ loseElement driver locator = do
 
 -- | Finds elements by locator from `document`
 findElements :: forall e f. (Unfoldable f) => Driver -> Locator -> Aff (selenium :: SELENIUM|e) (f Element)
-findElements driver locator =
-  unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs) <$> (_findElements driver locator)
+findElements driver locator = map fromArray $ _findElements driver locator
 
 -- | Same as `findElement` but starts searching from custom element
 findChild :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM|e) (Maybe Element)
@@ -128,8 +131,7 @@ findChild = _findChild Nothing Just
 
 -- | Same as `findElements` but starts searching from custom element
 findChildren :: forall e f. (Unfoldable f) => Element -> Locator -> Aff (selenium ::SELENIUM|e) (f Element)
-findChildren el locator =
-  unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs) <$> (_findChildren el locator)
+findChildren el locator = map fromArray $ _findChildren el locator
 
 foreign import setFileDetector :: forall e. Driver -> FileDetector -> Aff (selenium :: SELENIUM|e) Unit
 
@@ -148,7 +150,7 @@ foreign import getCssValue :: forall e. Element -> String -> Aff (selenium :: SE
 foreign import _getAttribute :: forall e a. Maybe a -> (a -> Maybe a) ->
                                 Element -> String -> Aff (selenium :: SELENIUM|e) (Maybe String)
 
--- | Tries to find an element starting from `document` will return `Nothing` if there
+-- | Tries to find an element starting from `document`; will return `Nothing` if there
 -- | is no element can be found by locator
 getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM|e) (Maybe String)
 getAttribute = _getAttribute Nothing Just
@@ -184,3 +186,18 @@ foreign import setWindowPosition :: forall e. Location -> Window -> Aff (seleniu
 foreign import setWindowSize :: forall e. Size -> Window -> Aff (selenium :: SELENIUM|e) Unit
 
 foreign import getWindowScroll :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Location
+
+foreign import getWindowHandle :: forall e. Driver -> Aff (selenium :: SELENIUM|e) WindowHandle
+
+foreign import _getAllWindowHandles :: forall e. Driver -> Aff (selenium :: SELENIUM|e) (Array WindowHandle)
+
+getAllWindowHandles :: forall f e. (Unfoldable f) => Driver -> Aff (selenium :: SELENIUM |e) (f WindowHandle)
+getAllWindowHandles driver = map fromArray $ _getAllWindowHandles driver
+
+
+fromArray :: forall a f. (Unfoldable f) => Array a -> f a
+fromArray = unfoldr (\xs -> (\rec -> Tuple rec.head rec.tail) <$> uncons xs)
+
+foreign import switchTo :: forall e. WindowHandle -> Driver -> Aff (selenium :: SELENIUM |e) Unit
+
+foreign import close :: forall e. Driver -> Aff (selenium :: SELENIUM |e) Unit

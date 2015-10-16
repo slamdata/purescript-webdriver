@@ -97,7 +97,7 @@ childExact :: forall e. Element -> Locator -> Aff (selenium :: SELENIUM | e) Ele
 findElement :: forall e. Driver -> Locator -> Aff (selenium :: SELENIUM | e) (Maybe Element)
 ```
 
-Tries to find an element starting from `document` will return `Nothing` if there
+Tries to find an element starting from `document`; will return `Nothing` if there
 is no element can be found by locator
 
 #### `loseElement`
@@ -203,8 +203,11 @@ getCssValue :: forall e. Element -> String -> Aff (selenium :: SELENIUM | e) Str
 #### `getAttribute`
 
 ``` purescript
-getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM | e) String
+getAttribute :: forall e. Element -> String -> Aff (selenium :: SELENIUM | e) (Maybe String)
 ```
+
+Tries to find an element starting from `document`; will return `Nothing` if there
+is no element can be found by locator
 
 #### `getText`
 
@@ -309,6 +312,30 @@ setWindowSize :: forall e. Size -> Window -> Aff (selenium :: SELENIUM | e) Unit
 
 ``` purescript
 getWindowScroll :: forall e. Driver -> Aff (selenium :: SELENIUM | e) Location
+```
+
+#### `getWindowHandle`
+
+``` purescript
+getWindowHandle :: forall e. Driver -> Aff (selenium :: SELENIUM | e) WindowHandle
+```
+
+#### `getAllWindowHandles`
+
+``` purescript
+getAllWindowHandles :: forall f e. (Unfoldable f) => Driver -> Aff (selenium :: SELENIUM | e) (f WindowHandle)
+```
+
+#### `switchTo`
+
+``` purescript
+switchTo :: forall e. WindowHandle -> Driver -> Aff (selenium :: SELENIUM | e) Unit
+```
+
+#### `close`
+
+``` purescript
+close :: forall e. Driver -> Aff (selenium :: SELENIUM | e) Unit
 ```
 
 

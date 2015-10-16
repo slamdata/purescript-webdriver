@@ -24,4 +24,22 @@ browser2str :: Browser -> String
 str2browser :: String -> Maybe Browser
 ```
 
+#### `browserCapabilities`
+
+``` purescript
+browserCapabilities :: Browser -> Capabilities
+```
+
+#### `versionCapabilities`
+
+``` purescript
+versionCapabilities :: String -> Capabilities
+```
+
+#### `platformCapabilities`
+
+``` purescript
+platformCapabilities :: String -> Capabilities
+```
+
 

@@ -401,3 +401,29 @@ exports.getWindowScroll = function(driver) {
         }).then(cb).thenCatch(eb);
     };
 };
+
+exports.getWindowHandle = function(driver) {
+    return function(cb, eb) {
+        driver.getWindowHandle().then(cb).thenCatch(eb);
+    };
+};
+
+exports._getAllWindowHandles = function(driver) {
+    return function(cb, eb) {
+        driver.getAllWindowHandles().then(cb).thenCatch(eb);
+    };
+};
+
+exports.switchTo = function(handle) {
+    return function(driver) {
+        return function(cb, eb) {
+            return driver.switchTo().window(handle).then(cb).thenCatch(eb);
+        };
+    };
+};
+
+exports.close = function(driver) {
+    return function(cb, eb) {
+        return driver.close().then(cb).thenCatch(eb);
+    };
+};

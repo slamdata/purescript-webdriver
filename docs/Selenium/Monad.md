@@ -225,7 +225,7 @@ getCssValue :: forall e o. Element -> String -> Selenium e o String
 #### `getAttribute`
 
 ``` purescript
-getAttribute :: forall e o. Element -> String -> Selenium e o String
+getAttribute :: forall e o. Element -> String -> Selenium e o (Maybe String)
 ```
 
 #### `getText`
@@ -382,6 +382,30 @@ clearLog :: forall e o. Selenium e o Unit
 
 ``` purescript
 getXHRStats :: forall e o. Selenium e o (List XHRStats)
+```
+
+#### `getWindowHandle`
+
+``` purescript
+getWindowHandle :: forall e o. Selenium e o WindowHandle
+```
+
+#### `getAllWindowHandles`
+
+``` purescript
+getAllWindowHandles :: forall e o. Selenium e o (List WindowHandle)
+```
+
+#### `switchTo`
+
+``` purescript
+switchTo :: forall e o. WindowHandle -> Selenium e o Unit
+```
+
+#### `closeWindow`
+
+``` purescript
+closeWindow :: forall e o. Selenium e o Unit
 ```
 
 

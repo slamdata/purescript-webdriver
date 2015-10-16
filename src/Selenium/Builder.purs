@@ -1,7 +1,8 @@
 module Selenium.Builder
        ( build
        , browser
-       , forBrowser
+       , version
+       , platform
        , usingServer
        , scrollBehaviour
        , withCapabilities
@@ -12,17 +13,19 @@ import Prelude
 import Selenium.Types
 import Selenium.Browser
 import Control.Monad.Eff
+import Data.Tuple
 import Data.List
 import Data.Function
+import Data.Monoid (mempty)
 import Data.Foldable (foldl)
+import Data.Foreign (toForeign)
 import Control.Monad.Writer (Writer(), execWriter)
 import Control.Monad.Writer.Class (tell)
 import Control.Monad.Aff (Aff())
+import Selenium.Capabilities
 
 data Command
-  = Browser String
-  | ForBrowser String String String
-  | SetChromeOptions ChromeOptions
+  = SetChromeOptions ChromeOptions
   | SetControlFlow ControlFlow
   | SetEnableNativeEvents Boolean
   | SetFirefoxOptions FirefoxOptions
@@ -33,11 +36,10 @@ data Command
   | SetSafariOptions SafariOptions
   | SetScrollBehaviour ScrollBehaviour
   | UsingServer String
-  | WithCapabilities Capabilities
 
-newtype Build a = Build (Writer (List Command) a)
+newtype Build a = Build (Writer (Tuple Capabilities (List Command)) a)
 
-unBuild :: forall a. Build a -> Writer (List Command) a
+unBuild :: forall a. Build a -> Writer (Tuple Capabilities (List Command)) a
 unBuild (Build a) = a
 
 instance functorBuild :: Functor Build where
@@ -55,13 +57,13 @@ instance applicativeBuild :: Applicative Build where
 instance monadBuild :: Monad Build
 
 rule :: Command -> Build Unit
-rule = Build <<< tell <<< singleton
+rule = Build <<< tell <<< Tuple emptyCapabilities <<< singleton
 
-browser :: Browser -> Build Unit
-browser = rule <<< Browser <<< browser2str
+version :: String -> Build Unit
+version = withCapabilities <<< versionCapabilities
 
-forBrowser :: Browser -> String -> String -> Build Unit
-forBrowser b v p = rule $ ForBrowser (browser2str b) v p
+platform :: String -> Build Unit
+platform = withCapabilities <<< platformCapabilities
 
 usingServer :: String -> Build Unit
 usingServer = rule <<< UsingServer
@@ -70,31 +72,33 @@ scrollBehaviour :: ScrollBehaviour -> Build Unit
 scrollBehaviour = rule <<< SetScrollBehaviour
 
 withCapabilities :: Capabilities -> Build Unit
-withCapabilities = rule <<< WithCapabilities
+withCapabilities c = Build $ tell $ Tuple c noRules
+  where
+  noRules :: List Command
+  noRules = Nil
+
+browser :: Browser -> Build Unit
+browser = withCapabilities <<< browserCapabilities
 
 build :: forall e. Build Unit -> Aff (selenium :: SELENIUM|e) Driver
-build commands = do
+build dsl = do
   builder <- _newBuilder
-  _build $ interpret (execWriter $ unBuild commands) builder
-
+  case execWriter $ unBuild dsl of
+    Tuple capabilities commands ->
+      _build $ runFn2 _withCapabilities (interpret commands builder) capabilities
 
 interpret :: List Command -> Builder -> Builder
 interpret commands b = foldl foldFn b commands
   where
   foldFn :: Builder -> Command -> Builder
-  foldFn b (Browser br) = runFn2 _browser b br
-  foldFn b (ForBrowser br v p) = runFn4 _forBrowser b br v p
   foldFn b (UsingServer s) = runFn2 _usingServer b s
   foldFn b (SetScrollBehaviour bh) = runFn2 _setScrollBehaviour b bh
-  foldFn b (WithCapabilities c) = runFn2 _withCapabilities b c
   foldFn b _ = b
 
 
 foreign import _newBuilder :: forall e. Aff (selenium :: SELENIUM|e) Builder
 foreign import _build :: forall e. Builder -> Aff (selenium :: SELENIUM|e) Driver
 
-foreign import _browser :: Fn2 Builder String Builder
-foreign import _forBrowser :: Fn4 Builder String String String Builder
 foreign import _usingServer :: Fn2 Builder String Builder
 foreign import _setScrollBehaviour :: Fn2 Builder ScrollBehaviour Builder
 foreign import _withCapabilities :: Fn2 Builder Capabilities Builder

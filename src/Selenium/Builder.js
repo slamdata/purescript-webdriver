@@ -22,14 +22,6 @@ exports._build = function(builder) {
     };
 };
 
-exports._browser = function(b, br) {
-    return b.forBrowser(br);
-};
-
-exports._forBrowser = function(b, br, v, p) {
-    return b.forBrowser(br, v, p);
-};
-
 exports._usingServer = function(b, s) {
     return b.usingServer(s);
 };

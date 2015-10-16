@@ -15,16 +15,16 @@ instance applicativeBuild :: Applicative Build
 instance monadBuild :: Monad Build
 ```
 
-#### `browser`
+#### `version`
 
 ``` purescript
-browser :: Browser -> Build Unit
+version :: String -> Build Unit
 ```
 
-#### `forBrowser`
+#### `platform`
 
 ``` purescript
-forBrowser :: Browser -> String -> String -> Build Unit
+platform :: String -> Build Unit
 ```
 
 #### `usingServer`
@@ -43,6 +43,12 @@ scrollBehaviour :: ScrollBehaviour -> Build Unit
 
 ``` purescript
 withCapabilities :: Capabilities -> Build Unit
+```
+
+#### `browser`
+
+``` purescript
+browser :: Browser -> Build Unit
 ```
 
 #### `build`
