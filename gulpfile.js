@@ -43,13 +43,15 @@ gulp.task("docs", function() {
             "Selenium.ActionSequence": "docs/Selenium/ActionSequence.md",
             "Selenium.Browser": "docs/Selenium/Browser.md",
             "Selenium.Builder": "docs/Selenium/Builder.md",
+            "Selenium.Capabilities": "docs/Selenium/Capabilities.md",
+            "Selenium.Combinators": "docs/Selenium/Combinators.md",
+            "Selenium.FFProfile": "docs/Selenium/FFProfile.md",
             "Selenium.Key": "docs/Selenium/Key.md",
+            "Selenium.Monad": "docs/Selenium/Monad.md",
             "Selenium.MouseButton": "docs/Selenium/MouseButton.md",
             "Selenium.Remote": "docs/Selenium/Remote.md",
             "Selenium.ScrollBehaviour": "docs/Selenium/ScrollBehaviour.md",
             "Selenium.Types": "docs/Selenium/Types.md",
-            "Selenium.Monad": "docs/Selenium/Monad.md",
-            "Selenium.Combinators": "docs/Selenium/Combinators.md",
             "Selenium.XHR": "docs/Selenium/XHR.md"
         }
     });

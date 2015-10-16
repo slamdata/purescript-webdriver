@@ -237,3 +237,16 @@ clearLog = getDriver >>= S.clearLog >>> lift
 
 getXHRStats :: forall e o. Selenium e o (List XHRStats)
 getXHRStats = getDriver >>= S.getStats >>> map toList >>> lift
+
+
+getWindowHandle :: forall e o. Selenium e o WindowHandle
+getWindowHandle = getDriver >>= S.getWindowHandle >>> lift
+
+getAllWindowHandles :: forall e o. Selenium e o (List WindowHandle)
+getAllWindowHandles = getDriver >>= S.getAllWindowHandles >>> lift
+
+switchTo :: forall e o. WindowHandle -> Selenium e o Unit
+switchTo w = getDriver >>= S.switchTo w >>> lift
+
+closeWindow :: forall e o. Selenium e o Unit
+closeWindow = getDriver >>= S.close >>> lift
