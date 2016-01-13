@@ -14,11 +14,11 @@ newtype FFProfileBuild a
 
 ##### Instances
 ``` purescript
-instance functorFFProfileBuild :: Functor FFProfileBuild
-instance applyFFProfileBuild :: Apply FFProfileBuild
-instance bindFFProfileBuild :: Bind FFProfileBuild
-instance applicativeFFProfileBuild :: Applicative FFProfileBuild
-instance monadFFProfileBuild :: Monad FFProfileBuild
+Functor FFProfileBuild
+Apply FFProfileBuild
+Bind FFProfileBuild
+Applicative FFProfileBuild
+Monad FFProfileBuild
 ```
 
 #### `setPreference`

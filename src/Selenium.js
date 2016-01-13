@@ -166,12 +166,6 @@ exports.sendKeysEl = function(keys) {
     };
 };
 
-exports.clickEl = function(el) {
-    return function(cb, eb) {
-        el.click().then(cb).thenCatch(eb);
-    };
-};
-
 exports.getCssValue = function(el) {
     return function(str) {
         return function(cb, eb) {
@@ -304,6 +298,13 @@ exports.clearEl = function(el) {
         el.clear().then(cb).thenCatch(eb);
     };
 };
+
+exports.clickEl = function(el) {
+    return function(cb, eb) {
+        el.click().then(cb).thenCatch(eb);
+    };
+};
+
 
 exports.takeScreenshot = function(driver) {
     return function(cb, eb) {

@@ -240,6 +240,12 @@ getText :: forall e o. Element -> Selenium e o String
 clearEl :: forall e o. Element -> Selenium e o Unit
 ```
 
+#### `clickEl`
+
+``` purescript
+clickEl :: forall e o. Element -> Selenium e o Unit
+```
+
 #### `sendKeysEl`
 
 ``` purescript

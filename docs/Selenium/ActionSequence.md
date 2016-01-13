@@ -10,11 +10,11 @@ newtype Sequence a
 
 ##### Instances
 ``` purescript
-instance functorSequence :: Functor Sequence
-instance applySequence :: Apply Sequence
-instance bindSequence :: Bind Sequence
-instance applicativeSequence :: Applicative Sequence
-instance monadSequence :: Monad Sequence
+Functor Sequence
+Apply Sequence
+Bind Sequence
+Applicative Sequence
+Monad Sequence
 ```
 
 #### `click`
