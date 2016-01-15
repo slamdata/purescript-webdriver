@@ -161,6 +161,9 @@ getText el = lift $ S.getText el
 clearEl :: forall e o. Element -> Selenium e o Unit
 clearEl = lift <<< S.clearEl
 
+clickEl :: forall e o. Element -> Selenium e o Unit
+clickEl = lift <<< S.clickEl
+
 sendKeysEl :: forall e o. String -> Element -> Selenium e o Unit
 sendKeysEl ks el = lift $ S.sendKeysEl ks el
 

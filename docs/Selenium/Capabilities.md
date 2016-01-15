@@ -8,8 +8,8 @@ data Capabilities :: *
 
 ##### Instances
 ``` purescript
-instance semigroupCapabilities :: Semigroup Capabilities
-instance monoidCapabilities :: Monoid Capabilities
+Semigroup Capabilities
+Monoid Capabilities
 ```
 
 #### `emptyCapabilities`

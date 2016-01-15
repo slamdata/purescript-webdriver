@@ -141,8 +141,8 @@ need from `affjax` is `Method`
 
 ##### Instances
 ``` purescript
-instance eqMethod :: Eq Method
-instance methodIsForeign :: IsForeign Method
+Eq Method
+IsForeign Method
 ```
 
 #### `XHRState`
@@ -156,8 +156,8 @@ data XHRState
 
 ##### Instances
 ``` purescript
-instance xhrStateEq :: Eq XHRState
-instance xhrStateIsForeign :: IsForeign XHRState
+Eq XHRState
+IsForeign XHRState
 ```
 
 #### `Location`

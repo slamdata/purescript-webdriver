@@ -8,11 +8,11 @@ newtype Build a
 
 ##### Instances
 ``` purescript
-instance functorBuild :: Functor Build
-instance applyBuild :: Apply Build
-instance bindBuild :: Bind Build
-instance applicativeBuild :: Applicative Build
-instance monadBuild :: Monad Build
+Functor Build
+Apply Build
+Bind Build
+Applicative Build
+Monad Build
 ```
 
 #### `version`
