@@ -25,7 +25,7 @@ waitUntilJust :: forall e o a. Selenium e o (Maybe a) -> Int -> Selenium e o a
 #### `checker`
 
 ``` purescript
-checker :: forall e o a. Selenium e o Boolean -> Selenium e o Boolean
+checker :: forall e o. Selenium e o Boolean -> Selenium e o Boolean
 ```
 
 #### `getElementByCss`

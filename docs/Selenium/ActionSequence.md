@@ -1,6 +1,6 @@
 ## Module Selenium.ActionSequence
 
-DSL for building action sequences 
+DSL for building action sequences
 
 #### `Sequence`
 

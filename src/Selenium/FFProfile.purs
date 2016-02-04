@@ -17,7 +17,7 @@ import Prelude
 import Control.Monad.Aff (Aff())
 import Selenium.Capabilities
 import Selenium.Types
-import Data.List (List(..), singleton)
+import Data.List (List(), singleton)
 import Data.Foldable (foldl)
 import Data.Foreign (Foreign())
 import Control.Monad.Writer (Writer(), execWriter)
@@ -79,7 +79,7 @@ interpret commands b = foldl foldFn b commands
   foldFn p (SetPreference k v) = _setFFPreference k v p
 
 
-foreign import _setFFPreference :: forall e. String -> FFPreference -> FFProfile -> FFProfile
+foreign import _setFFPreference :: String -> FFPreference -> FFProfile -> FFProfile
 foreign import _newFFProfile :: forall e. Aff (selenium :: SELENIUM|e) FFProfile
 foreign import _encode :: forall e. FFProfile -> Aff (selenium :: SELENIUM|e) Capabilities
 

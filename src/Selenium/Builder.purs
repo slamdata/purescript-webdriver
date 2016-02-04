@@ -12,13 +12,10 @@ module Selenium.Builder
 import Prelude
 import Selenium.Types
 import Selenium.Browser
-import Control.Monad.Eff
 import Data.Tuple
 import Data.List
 import Data.Function
-import Data.Monoid (mempty)
 import Data.Foldable (foldl)
-import Data.Foreign (toForeign)
 import Control.Monad.Writer (Writer(), execWriter)
 import Control.Monad.Writer.Class (tell)
 import Control.Monad.Aff (Aff())
