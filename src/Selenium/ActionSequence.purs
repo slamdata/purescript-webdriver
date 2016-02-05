@@ -1,4 +1,4 @@
--- | DSL for building action sequences 
+-- | DSL for building action sequences
 module Selenium.ActionSequence
        ( sequence
        , keyUp
@@ -17,7 +17,6 @@ module Selenium.ActionSequence
 import Prelude
 import Selenium.Types
 import Selenium.MouseButton
-import Control.Monad.Eff
 import Data.List
 import Data.Function
 import Data.Foldable (foldl)
@@ -26,17 +25,17 @@ import Control.Monad.Writer.Class (tell)
 import Control.Monad.Aff (Aff())
 
 data Command
-  = Click MouseButton Element 
-  | DoubleClick MouseButton Element 
-  | KeyDown ControlKey 
-  | KeyUp ControlKey 
-  | MouseDown MouseButton Element 
-  | MouseToElement Element 
-  | MouseToLocation Location 
+  = Click MouseButton Element
+  | DoubleClick MouseButton Element
+  | KeyDown ControlKey
+  | KeyUp ControlKey
+  | MouseDown MouseButton Element
+  | MouseToElement Element
+  | MouseToLocation Location
   | MouseUp MouseButton Element
   | DnDToElement Element Element
-  | DnDToLocation Element Location 
-  | SendKeys String 
+  | DnDToLocation Element Location
+  | SendKeys String
 
 newtype Sequence a = Sequence (Writer (List Command) a)
 
@@ -58,40 +57,40 @@ instance applicativeSequence :: Applicative Sequence where
 instance monadSequence :: Monad Sequence
 
 rule :: Command -> Sequence Unit
-rule = Sequence <<< tell <<< singleton 
+rule = Sequence <<< tell <<< singleton
 
 
-click :: MouseButton -> Element -> Sequence Unit 
+click :: MouseButton -> Element -> Sequence Unit
 click btn el = rule $ Click btn el
 
-leftClick :: Element -> Sequence Unit 
+leftClick :: Element -> Sequence Unit
 leftClick = click leftButton
 
-doubleClick :: MouseButton -> Element -> Sequence Unit 
-doubleClick btn el = rule $ DoubleClick btn el 
+doubleClick :: MouseButton -> Element -> Sequence Unit
+doubleClick btn el = rule $ DoubleClick btn el
 
-hover :: Element -> Sequence Unit 
-hover el = rule $ MouseToElement el 
+hover :: Element -> Sequence Unit
+hover el = rule $ MouseToElement el
 
-mouseDown :: MouseButton -> Element -> Sequence Unit 
-mouseDown btn el = rule $ MouseDown btn el 
+mouseDown :: MouseButton -> Element -> Sequence Unit
+mouseDown btn el = rule $ MouseDown btn el
 
-mouseUp :: MouseButton -> Element -> Sequence Unit 
-mouseUp btn el = rule $ MouseUp btn el 
+mouseUp :: MouseButton -> Element -> Sequence Unit
+mouseUp btn el = rule $ MouseUp btn el
 
-sendKeys :: String -> Sequence Unit 
-sendKeys keys = rule $ SendKeys keys 
+sendKeys :: String -> Sequence Unit
+sendKeys keys = rule $ SendKeys keys
 
-mouseToLocation :: Location -> Sequence Unit 
-mouseToLocation loc = rule $ MouseToLocation loc 
+mouseToLocation :: Location -> Sequence Unit
+mouseToLocation loc = rule $ MouseToLocation loc
 
 -- | This function is used only with special keys (META, CONTROL, etc)
 -- | It doesn't emulate __keyDown__ event
-keyDown :: ControlKey -> Sequence Unit 
-keyDown k = rule $ KeyDown k 
+keyDown :: ControlKey -> Sequence Unit
+keyDown k = rule $ KeyDown k
 -- | This function is used only with special keys (META, CONTROL, etc)
 -- | It doesn't emulate __keyUp__ event
-keyUp :: ControlKey -> Sequence Unit 
+keyUp :: ControlKey -> Sequence Unit
 keyUp k = rule $ KeyUp k
 
 dndToElement :: Element -> Element -> Sequence Unit
@@ -107,7 +106,7 @@ sequence driver commands = do
 
 interpret :: List Command -> ActionSequence -> ActionSequence
 interpret commands seq =
-  foldl foldFn seq commands 
+  foldl foldFn seq commands
   where
   foldFn :: ActionSequence -> Command -> ActionSequence
   foldFn seq (Click btn el) = runFn3 _click seq btn el

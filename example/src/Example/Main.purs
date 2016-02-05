@@ -4,7 +4,7 @@ import Prelude
 import Control.Monad.Eff (Eff())
 import Control.Monad.Eff.Console (CONSOLE())
 import Control.Monad.Eff.Exception (EXCEPTION())
-import Control.Monad.Aff (Aff(), launchAff, later')
+import Control.Monad.Aff (launchAff, later')
 import Control.Monad.Aff.Console (log)
 import Data.Maybe (maybe)
 import Selenium

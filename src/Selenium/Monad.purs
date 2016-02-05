@@ -4,18 +4,15 @@
 module Selenium.Monad where
 
 import Prelude
-import Control.Monad.Error.Class (throwError)
-import Control.Monad.Eff.Exception (error, Error())
+import Control.Monad.Eff.Exception (Error())
 import Data.Either (Either())
 import Data.Maybe (Maybe())
 import Data.Foreign (Foreign())
-import Data.Maybe.Unsafe (fromJust)
 import Data.List
 import DOM
 import Selenium.Types
 import Control.Monad.Eff.Console (CONSOLE())
 import Control.Monad.Eff.Ref (REF())
-import Control.Monad.Trans
 import Control.Monad.Reader.Trans
 import Control.Monad.Reader.Class
 import qualified Control.Monad.Aff as A

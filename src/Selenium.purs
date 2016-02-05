@@ -51,12 +51,10 @@ module Selenium
        ) where
 
 import Prelude
-import Control.Monad.Eff (Eff())
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Data.Maybe (Maybe())
 import Data.Either (either)
-import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Aff (Aff(), attempt)
 import Selenium.Types
 import Data.Unfoldable (Unfoldable, unfoldr)
@@ -64,7 +62,6 @@ import Data.Foreign (Foreign())
 import Data.Maybe (Maybe(..))
 import Data.Array (uncons)
 import Data.Tuple (Tuple(..))
-import DOM (DOM())
 
 -- | Go to url
 foreign import get :: forall e. Driver -> String -> Aff (selenium :: SELENIUM|e) Unit
