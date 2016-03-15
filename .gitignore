@@ -1,8 +1,8 @@
-/node_modules/
+/.*
+!/.gitignore
+!/.travis.yml
 /bower_components/
+/node_modules/
 /output/
-public/css/!bootstrap*.css
-example/node_modules/
-.psci_modules
-.psci
+/example/node_modules/
 phantomjsdriver.log
