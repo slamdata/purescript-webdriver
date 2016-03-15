@@ -1,23 +1,12 @@
 {
-  "name": "purescript-webdriver",
-  "description": "A PureScript interface to Selenium's Node Webdriver.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/slamdata/purescript-webdriver.git"
-  },
-  "license": "Apache-2.0",
-  "authors": [
-    "Maxim Zimaliev <zimaliev@gmail.com>",
-    "Jon Sterling <jon@jonmsterling.com>"
-  ],
+  "private": true,
   "scripts": {
-    "build": "npm install && gulp make-example",
-    "example": "npm install && gulp make-example && node example/main.js"
+    "clean": "rimraf output && rimraf .pulp-cache",
+    "build": "pulp build"
   },
-  "dependencies": {
-    "gulp": "^3.9.0",
-    "gulp-purescript": "^0.8.0",
+  "devDependencies": {
+    "pulp": "^8.1.0",
     "purescript": "^0.7.6",
-    "selenium-webdriver": "^2.46.1"
+    "rimraf": "^2.5.2"
   }
 }
