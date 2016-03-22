@@ -17,7 +17,6 @@ exports._setFFPreference = function(key) {
 exports._encode = function(p) {
     return function(cb, eb) {
         p.encode()
-            .then(function(c) { return cb({firefox_profile: c});})
-            .thenCatch(eb);
+            .then(function(c) { return cb({firefox_profile: c});}, eb);
     };
 };

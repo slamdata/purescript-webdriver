@@ -8,7 +8,7 @@ var webdriver = require("selenium-webdriver"),
 exports.get = function(driver) {
     return function(url) {
         return function(cb, eb) {
-            driver.get(url).then(cb).thenCatch(eb);
+            driver.get(url).then(cb, eb);
         };
     };
 };
@@ -39,9 +39,8 @@ exports.wait = function(check) {
                             } else {
                                 eb(new Error("wait promise has returned false"));
                             }
-                        }).thenCatch(eb);
-                    })
-                    .thenCatch(eb);
+                        }, eb);
+                    }, eb);
             };
         };
     };
@@ -49,7 +48,7 @@ exports.wait = function(check) {
 
 exports.quit = function(driver) {
     return function(cb, eb) {
-        driver.quit().then(cb).thenCatch(eb);
+        driver.quit().then(cb,eb);
     };
 };
 
@@ -115,7 +114,7 @@ function _find(nothing) {
                 return function(cb) {
                     driver.findElement(by).then(function(el) {
                         return cb(just(el));
-                    }).thenCatch(function() {
+                    }, function() {
                         return cb(nothing);
                     });
                 };
@@ -127,7 +126,7 @@ function _find(nothing) {
 function _exact(driver) {
     return function(by) {
         return function(cb, eb) {
-            driver.findElement(by).then(cb).thenCatch(eb);
+            driver.findElement(by).then(cb, eb);
         };
     };
 }
@@ -148,9 +147,7 @@ function _finds(parent) {
         return function(cb, eb) {
             return parent.findElements(by).then(function(children) {
                 return cb(children);
-            }).thenCatch(function(err) {
-                return eb(err);
-            });
+            }, eb)
         };
     };
 }
@@ -161,7 +158,7 @@ exports._findChildren = _finds;
 exports.sendKeysEl = function(keys) {
     return function(el) {
         return function(cb, eb) {
-            el.sendKeys(keys).then(cb).thenCatch(eb);
+            el.sendKeys(keys).then(cb, eb);
         };
     };
 };
@@ -169,7 +166,7 @@ exports.sendKeysEl = function(keys) {
 exports.getCssValue = function(el) {
     return function(str) {
         return function(cb, eb) {
-            return el.getCssValue(str).then(cb).thenCatch(eb);
+            return el.getCssValue(str).then(cb, eb);
         };
     };
 };
@@ -185,7 +182,7 @@ exports._getAttribute = function(nothing) {
                         } else {
                             cb(just(attr));
                         }
-                    }).thenCatch(eb);
+                    }, eb);
                 };
             };
         };
@@ -194,7 +191,7 @@ exports._getAttribute = function(nothing) {
 
 exports.getText = function(el) {
     return function(cb, eb) {
-        return el.getText().then(cb).thenCatch(eb);
+        return el.getText().then(cb, eb);
     };
 };
 
@@ -202,7 +199,7 @@ exports.isDisplayed = function(el) {
     return function(cb, eb) {
         return el.isDisplayed().then(function(is) {
             return cb(is);
-        }).thenCatch(eb);
+        }, eb);
     };
 };
 
@@ -210,40 +207,40 @@ exports.isEnabled = function(el) {
     return function(cb, eb) {
         return el.isEnabled().then(function(is) {
             return cb(is);
-        }).thenCatch(eb);
+        }, eb);
     };
 };
 
 exports.getCurrentUrl = function(driver) {
     return function(cb, eb) {
-        return driver.getCurrentUrl().then(cb).thenCatch(eb);
+        return driver.getCurrentUrl().then(cb, eb);
     };
 };
 
 exports.getTitle = function(driver) {
     return function(cb, eb) {
-        return driver.getTitle().then(cb).thenCatch(eb);
+        return driver.getTitle().then(cb, eb);
     };
 };
 
 exports.navigateBack = function(driver) {
     return function(cb, eb) {
         var n = new webdriver.WebDriver.Navigation(driver);
-        return n.back().then(cb).thenCatch(eb);
+        return n.back().then(cb, eb);
     };
 };
 
 exports.navigateForward = function(driver) {
     return function(cb, eb) {
         var n = new webdriver.WebDriver.Navigation(driver);
-        return n.forward().then(cb).thenCatch(eb);
+        return n.forward().then(cb, eb);
     };
 };
 
 exports.refresh = function(driver) {
     return function(cb, eb) {
         var n = new webdriver.WebDriver.Navigation(driver);
-        return n.refresh().then(cb).thenCatch(eb);
+        return n.refresh().then(cb, eb);
     };
 };
 
@@ -251,7 +248,7 @@ exports.navigateTo = function(url) {
     return function(driver) {
         return function(cb, eb) {
             var n = new webdriver.WebDriver.Navigation(driver);
-            return n.to(url).then(cb).thenCatch(eb);
+            return n.to(url).then(cb, eb);
         };
     };
 };
@@ -259,26 +256,26 @@ exports.navigateTo = function(url) {
 
 exports.getInnerHtml = function(el) {
     return function(cb, eb) {
-        el.getInnerHtml().then(cb).thenCatch(eb);
+        el.getInnerHtml().then(cb, eb);
     };
 };
 
 exports.getSize = function(el) {
     return function(cb, eb) {
-        el.getSize().then(cb).thenCatch(eb);
+        el.getSize().then(cb, eb);
     };
 };
 
 exports.getLocation = function(el) {
     return function(cb, eb) {
-        el.getLocation().then(cb).thenCatch(eb);
+        el.getLocation().then(cb, eb);
     };
 };
 
 function execute(driver) {
     return function(action) {
         return function(cb, eb) {
-            driver.executeScript(action).then(cb).thenCatch(eb);
+            driver.executeScript(action).then(cb, eb);
         };
     };
 }
@@ -295,13 +292,13 @@ exports.affLocator = function(aff) {
 
 exports.clearEl = function(el) {
     return function(cb, eb) {
-        el.clear().then(cb).thenCatch(eb);
+        el.clear().then(cb, eb);
     };
 };
 
 exports.clickEl = function(el) {
     return function(cb, eb) {
-        el.click().then(cb).thenCatch(eb);
+        el.click().then(cb, eb);
     };
 };
 
@@ -309,8 +306,7 @@ exports.clickEl = function(el) {
 exports.takeScreenshot = function(driver) {
     return function(cb, eb) {
         driver.takeScreenshot()
-            .then(cb)
-            .thenCatch(eb);
+            .then(cb, eb);
     };
 };
 
@@ -330,8 +326,7 @@ exports.saveScreenshot = function(fileName) {
                                      if (err) return eb(err);
                                      return cb();
                                  });
-                })
-                .thenCatch(eb);
+                }, eb);
         };
     };
 };
@@ -351,24 +346,21 @@ exports.getWindow = function(window) {
 exports.getWindowPosition = function(window) {
     return function(cb, eb) {
         return window.getPosition()
-            .then(cb)
-            .thenCatch(eb);
+            .then(cb, eb);
     };
 };
 
 exports.getWindowSize = function(window) {
     return function(cb, eb) {
         return window.getSize()
-            .then(cb)
-            .thenCatch(eb);
+            .then(cb, eb);
     };
 };
 
 exports.maximizeWindow = function(window) {
     return function(cb, eb) {
         return window.maximize()
-            .then(cb)
-            .thenCatch(eb);
+            .then(cb, eb);
     };
 };
 
@@ -376,8 +368,7 @@ exports.setWindowPosition = function(loc) {
     return function(window) {
         return function(cb, eb) {
             return window.setPosition(loc.x, loc.y)
-                .then(cb)
-                .thenCatch(eb);
+                .then(cb, eb);
         };
     };
 };
@@ -386,8 +377,7 @@ exports.setWindowSize = function(size) {
     return function(window) {
         return function(cb, eb) {
             return window.setSize(size.width, size.height)
-                .then(cb)
-                .thenCatch(eb);
+                .then(cb, eb);
         };
     };
 };
@@ -399,32 +389,32 @@ exports.getWindowScroll = function(driver) {
                 x: window.scrollX,
                 y: window.scrollY
             };
-        }).then(cb).thenCatch(eb);
+        }).then(cb, eb);
     };
 };
 
 exports.getWindowHandle = function(driver) {
     return function(cb, eb) {
-        driver.getWindowHandle().then(cb).thenCatch(eb);
+        driver.getWindowHandle().then(cb, eb);
     };
 };
 
 exports._getAllWindowHandles = function(driver) {
     return function(cb, eb) {
-        driver.getAllWindowHandles().then(cb).thenCatch(eb);
+        driver.getAllWindowHandles().then(cb, eb);
     };
 };
 
 exports.switchTo = function(handle) {
     return function(driver) {
         return function(cb, eb) {
-            return driver.switchTo().window(handle).then(cb).thenCatch(eb);
+            return driver.switchTo().window(handle).then(cb, eb);
         };
     };
 };
 
 exports.close = function(driver) {
     return function(cb, eb) {
-        return driver.close().then(cb).thenCatch(eb);
+        return driver.close().then(cb, eb);
     };
 };
