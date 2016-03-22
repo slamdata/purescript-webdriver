@@ -15,7 +15,7 @@ exports.newSequence = function(driver) {
 exports.performSequence = function(sequence) {
     return function(cb, eb) {
         try {
-            return sequence.perform().then(cb).thenCatch(eb);
+            return sequence.perform().then(cb, eb);
         }
         catch (e) {
             return eb(e);
