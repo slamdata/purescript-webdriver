@@ -4,6 +4,8 @@ module Selenium.ActionSequence
        , keyUp
        , keyDown
        , mouseToLocation
+       , dndToElement
+       , dndToLocation
        , sendKeys
        , mouseUp
        , mouseDown
