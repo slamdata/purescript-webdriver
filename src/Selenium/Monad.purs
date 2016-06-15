@@ -69,8 +69,7 @@ later time check = ReaderT \r ->
 
 -- LIFT `Selenium` funcs to `Selenium.Monad`
 get :: forall e o. String -> Selenium e o Unit
-get url =
-  getDriver >>= lift <<< flip S.get url
+get url = getDriver >>= lift <<< flip S.get url
 
 wait :: forall e o. Selenium e o Boolean -> Int -> Selenium e o Unit
 wait check time = ReaderT \r ->
@@ -162,7 +161,8 @@ clickEl :: forall e o. Element -> Selenium e o Unit
 clickEl = lift <<< S.clickEl
 
 sendKeysEl :: forall e o. String -> Element -> Selenium e o Unit
-sendKeysEl ks el = lift $ S.sendKeysEl ks el
+sendKeysEl ks el =
+  lift $ S.sendKeysEl ks el
 
 script :: forall e o. String -> Selenium e o Foreign
 script str =
