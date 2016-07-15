@@ -57,7 +57,7 @@ import Data.Maybe (Maybe())
 import Data.Either (either)
 import Control.Monad.Aff (Aff(), attempt)
 import Selenium.Types
-import Data.Unfoldable (Unfoldable, unfoldr)
+import Data.Unfoldable (class Unfoldable, unfoldr)
 import Data.Foreign (Foreign())
 import Data.Maybe (Maybe(..))
 import Data.Array (uncons)
@@ -116,7 +116,7 @@ loseElement driver locator = do
   result <- attempt $ findExact driver locator
   either (const $ pure unit) (const $ throwError $ error failMessage) result
     where
-    failMessage = "Found element with locator: " ++ showLocator locator
+    failMessage = "Found element with locator: " <> showLocator locator
 
 -- | Finds elements by locator from `document`
 findElements :: forall e f. (Unfoldable f) => Driver -> Locator -> Aff (selenium :: SELENIUM|e) (f Element)
