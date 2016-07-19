@@ -1,7 +1,7 @@
 module Selenium.Types where
 
 import Prelude
-import Data.Foreign.Class (IsForeign)
+import Data.Foreign.Class (class IsForeign)
 import Data.Foreign (readString, ForeignError(..))
 import Data.String (toLower)
 import Data.Either (Either(..))

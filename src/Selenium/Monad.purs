@@ -15,11 +15,11 @@ import Control.Monad.Eff.Console (CONSOLE())
 import Control.Monad.Eff.Ref (REF())
 import Control.Monad.Reader.Trans
 import Control.Monad.Reader.Class
-import qualified Control.Monad.Aff as A
-import qualified Control.Monad.Aff.Reattempt as A
-import qualified Selenium as S
-import qualified Selenium.ActionSequence as S
-import qualified Selenium.XHR as S
+import Control.Monad.Aff as A
+import Control.Monad.Aff.Reattempt as A
+import Selenium as S
+import Selenium.ActionSequence as S
+import Selenium.XHR as S
 -- | `Driver` is field of `ReaderT` context
 -- | Usually selenium tests are run with tons of configs (i.e. xpath locators,
 -- | timeouts) all those configs can be putted to `Selenium e o a`
@@ -236,7 +236,7 @@ clearLog :: forall e o. Selenium e o Unit
 clearLog = getDriver >>= S.clearLog >>> lift
 
 getXHRStats :: forall e o. Selenium e o (List XHRStats)
-getXHRStats = getDriver >>= S.getStats >>> map toList >>> lift
+getXHRStats = getDriver >>= S.getStats >>> map fromFoldable >>> lift
 
 
 getWindowHandle :: forall e o. Selenium e o WindowHandle

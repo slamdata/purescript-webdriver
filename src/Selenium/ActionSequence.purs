@@ -20,7 +20,7 @@ import Prelude
 import Selenium.Types
 import Selenium.MouseButton
 import Data.List
-import Data.Function
+import Data.Function.Uncurried
 import Data.Foldable (foldl)
 import Control.Monad.Writer (Writer(), execWriter)
 import Control.Monad.Writer.Class (tell)

@@ -4,7 +4,6 @@ import Prelude
 import Control.Alt ((<|>))
 import Control.Monad.Trans (lift)
 import Data.Maybe (Maybe(), isJust, maybe)
-import Data.Maybe.Unsafe (fromJust)
 import Data.Either (Either(..), either)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Eff.Exception (error)
@@ -33,7 +32,7 @@ tryFind probablyLocator =
 waitUntilJust :: forall e o a. Selenium e o (Maybe a) -> Int -> Selenium e o a
 waitUntilJust check time = do
   wait (checker $ isJust <$> check) time
-  fromJust <$> check
+  check >>= maybe (throwError $ error $ "Maybe was not Just after waiting for isJust") pure
 
 -- Tries to evaluate `Selenium` if it returns `false` after 500ms
 checker :: forall e o. Selenium e o Boolean -> Selenium e o Boolean
@@ -81,4 +80,4 @@ await timeout check = do
     Right _ -> pure unit
 
 awaitUrlChanged :: forall e o. String -> Selenium e o Boolean
-awaitUrlChanged oldURL = checker $ (oldURL /=) <$> getCurrentUrl
+awaitUrlChanged oldURL = checker $ (oldURL /= _) <$> getCurrentUrl

@@ -10,12 +10,12 @@ import Control.Monad.Error.Class (throwError)
 import Control.Monad.Eff.Exception (error)
 import Data.Foreign (readBoolean, isUndefined, readArray)
 import Data.Foreign.Class (readProp)
-import Data.Foreign.NullOrUndefined (runNullOrUndefined)
+import Data.Foreign.NullOrUndefined (unNullOrUndefined)
 
 -- | Start spy on xhrs. It defines global variable in browser
--- | and put information about to it. 
+-- | and put information about to it.
 startSpying :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
-startSpying driver = void $ 
+startSpying driver = void $
   executeStr driver """
 "use strict"
 // If we have activated spying
@@ -52,13 +52,13 @@ if (window.__SELENIUM__) {
           var send = XMLHttpRequest.prototype.send;
           window.XMLHttpRequest.prototype.send =
               function(data) {
-                  // this request can be deleted (this.clean() i.e.) 
+                  // this request can be deleted (this.clean() i.e.)
                   if (Selenium.log[this.__id]) {
                       Selenium.log[this.__id].state = "opened";
                   }
                   // monkey pathc `onload` (I suppose it's useless to fire xhr
                   // without `onload` handler, but to be sure there is check for
-                  // type of current value 
+                  // type of current value
                   var m = this.onload;
                   this.onload = function() {
                       if (Selenium.log[this.__id]) {
@@ -70,7 +70,7 @@ if (window.__SELENIUM__) {
                   };
                   send.apply(this, arguments);
               };
-          // monkey patch `abort`          
+          // monkey patch `abort`
           var abort = window.XMLHttpRequest.prototype.abort;
           window.XMLHttpRequest.prototype.abort = function() {
               if (Selenium.log[this.__id]) {
@@ -79,7 +79,7 @@ if (window.__SELENIUM__) {
               abort.apply(this, arguments);
           };
           this.isActive = true;
-          // if we define it here we need not to make `send` global 
+          // if we define it here we need not to make `send` global
           Selenium.unspy = function() {
               this.active = false;
               window.XMLHttpRequest.send = send;
@@ -106,8 +106,8 @@ if (window.__SELENIUM__) {
 """
 
 -- | Clean log. Will raise an error if spying hasn't been initiated
-clearLog :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit 
-clearLog driver = do 
+clearLog :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
+clearLog driver = do
   success <- executeStr driver """
   if (!window.__SELENIUM__) {
     return false;
@@ -123,7 +123,7 @@ clearLog driver = do
 
 -- | Get recorded xhr stats. If spying has not been set will raise an error
 getStats :: forall e. Driver -> Aff (selenium :: SELENIUM|e) (Array XHRStats)
-getStats driver = do 
+getStats driver = do
   log <- executeStr driver """
   if (!window.__SELENIUM__) {
     return undefined;
@@ -142,8 +142,8 @@ getStats driver = do
       method <- readProp "method" el
       url <- readProp "url" el
       async <- readProp "async" el
-      password <- runNullOrUndefined <$> readProp "password" el
-      user <- runNullOrUndefined <$> readProp "user" el
+      password <- unNullOrUndefined <$> readProp "password" el
+      user <- unNullOrUndefined <$> readProp "user" el
       pure { state: state
            , method: method
            , url: url
@@ -151,6 +151,3 @@ getStats driver = do
            , password: password
            , user: user
            }
-  
-
-
