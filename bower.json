@@ -18,7 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "purescript-aff": "^1.0.0",
-    "purescript-aff-reattempt": "git://github.com/daniel-chambers/purescript-aff-reattempt.git#249a49bbbdffdf31ec70ec3e2e0458e1a7a84084",
+    "purescript-aff-reattempt": "^1.0.0",
     "purescript-base": "^1.0.0",
     "purescript-dom": "^1.1.0"
   }
