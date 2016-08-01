@@ -1,30 +1,33 @@
 -- | DSL for building action sequences
 module Selenium.ActionSequence
-       ( sequence
-       , keyUp
-       , keyDown
-       , mouseToLocation
-       , dndToElement
-       , dndToLocation
-       , sendKeys
-       , mouseUp
-       , mouseDown
-       , hover
-       , doubleClick
-       , leftClick
-       , click
-       , Sequence()
-       ) where
+  ( sequence
+  , keyUp
+  , keyDown
+  , mouseToLocation
+  , dndToElement
+  , dndToLocation
+  , sendKeys
+  , mouseUp
+  , mouseDown
+  , hover
+  , doubleClick
+  , leftClick
+  , click
+  , Sequence
+  ) where
 
 import Prelude
-import Selenium.Types
-import Selenium.MouseButton
-import Data.List
-import Data.Function.Uncurried
-import Data.Foldable (foldl)
-import Control.Monad.Writer (Writer(), execWriter)
+
+import Control.Monad.Aff (Aff)
+import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
-import Control.Monad.Aff (Aff())
+
+import Data.Foldable (foldl)
+import Data.Function.Uncurried (Fn3, Fn2, runFn3, runFn2)
+import Data.List (List, singleton)
+
+import Selenium.MouseButton (leftButton)
+import Selenium.Types (ActionSequence, Location, Element, ControlKey, MouseButton, SELENIUM, Driver)
 
 data Command
   = Click MouseButton Element

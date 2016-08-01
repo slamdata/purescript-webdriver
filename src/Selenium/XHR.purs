@@ -1,16 +1,19 @@
 module Selenium.XHR where
 
 import Prelude
-import Data.Either (either, Either(..))
-import Data.Traversable (for)
-import Selenium (executeStr)
-import Selenium.Types
+
 import Control.Monad.Aff (Aff())
-import Control.Monad.Error.Class (throwError)
 import Control.Monad.Eff.Exception (error)
+import Control.Monad.Error.Class (throwError)
+
+import Data.Either (either, Either(..))
 import Data.Foreign (readBoolean, isUndefined, readArray)
 import Data.Foreign.Class (readProp)
 import Data.Foreign.NullOrUndefined (unNullOrUndefined)
+import Data.Traversable (for)
+
+import Selenium (executeStr)
+import Selenium.Types (XHRStats, SELENIUM, Driver)
 
 -- | Start spy on xhrs. It defines global variable in browser
 -- | and put information about to it.

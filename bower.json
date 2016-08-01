@@ -17,9 +17,9 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "purescript-aff": "^1.0.0",
+    "purescript-aff": "^1.1.0",
     "purescript-aff-reattempt": "^1.0.0",
     "purescript-base": "^1.0.0",
-    "purescript-dom": "^1.1.0"
+    "purescript-dom": "^2.0.0"
   }
 }

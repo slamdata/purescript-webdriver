@@ -1,67 +1,69 @@
 module Selenium
-       ( get
-       , wait
-       , quit
-       , byClassName
-       , byCss
-       , byId
-       , byName
-       , byXPath
-       , affLocator
-       , findElement
-       , loseElement
-       , findElements
-       , findChild
-       , findChildren
-       , findExact
-       , showLocator
-       , childExact
-       , navigateBack
-       , navigateForward
-       , refresh
-       , navigateTo
-       , getCurrentUrl
-       , executeStr
-       , sendKeysEl
-       , clickEl
-       , getCssValue
-       , getAttribute
-       , getText
-       , getTitle
-       , isDisplayed
-       , isEnabled
-       , getInnerHtml
-       , getSize
-       , getLocation
-       , clearEl
-       , setFileDetector
-       , takeScreenshot
-       , saveScreenshot
-       , setWindowSize
-       , getWindowSize
-       , maximizeWindow
-       , setWindowPosition
-       , getWindowPosition
-       , getWindow
-       , getWindowScroll
-       , getWindowHandle
-       , getAllWindowHandles
-       , switchTo
-       , close
-       ) where
+  ( get
+  , wait
+  , quit
+  , byClassName
+  , byCss
+  , byId
+  , byName
+  , byXPath
+  , affLocator
+  , findElement
+  , loseElement
+  , findElements
+  , findChild
+  , findChildren
+  , findExact
+  , showLocator
+  , childExact
+  , navigateBack
+  , navigateForward
+  , refresh
+  , navigateTo
+  , getCurrentUrl
+  , executeStr
+  , sendKeysEl
+  , clickEl
+  , getCssValue
+  , getAttribute
+  , getText
+  , getTitle
+  , isDisplayed
+  , isEnabled
+  , getInnerHtml
+  , getSize
+  , getLocation
+  , clearEl
+  , setFileDetector
+  , takeScreenshot
+  , saveScreenshot
+  , setWindowSize
+  , getWindowSize
+  , maximizeWindow
+  , setWindowPosition
+  , getWindowPosition
+  , getWindow
+  , getWindowScroll
+  , getWindowHandle
+  , getAllWindowHandles
+  , switchTo
+  , close
+  ) where
 
 import Prelude
+
+import Control.Monad.Aff (Aff(), attempt)
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
-import Data.Maybe (Maybe())
+
+import Data.Array (uncons)
 import Data.Either (either)
-import Control.Monad.Aff (Aff(), attempt)
-import Selenium.Types
-import Data.Unfoldable (class Unfoldable, unfoldr)
 import Data.Foreign (Foreign())
 import Data.Maybe (Maybe(..))
-import Data.Array (uncons)
 import Data.Tuple (Tuple(..))
+import Data.Unfoldable (class Unfoldable, unfoldr)
+
+import Selenium.Types (SELENIUM, Driver, WindowHandle, Location, Window, Size, Element, FileDetector, Locator)
 
 -- | Go to url
 foreign import get :: forall e. Driver -> String -> Aff (selenium :: SELENIUM|e) Unit

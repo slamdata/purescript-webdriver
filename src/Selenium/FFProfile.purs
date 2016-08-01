@@ -1,27 +1,31 @@
 module Selenium.FFProfile
-       ( FFProfileBuild()
-       , FFPreference()
-       , buildFFProfile
-       , setPreference
-       , setStringPreference
-       , setIntPreference
-       , setNumberPreference
-       , setBoolPreference
-       , intToFFPreference
-       , numberToFFPreference
-       , stringToFFPreference
-       , boolToFFPreference
-       ) where
+  ( FFProfileBuild
+  , FFPreference
+  , buildFFProfile
+  , setPreference
+  , setStringPreference
+  , setIntPreference
+  , setNumberPreference
+  , setBoolPreference
+  , intToFFPreference
+  , numberToFFPreference
+  , stringToFFPreference
+  , boolToFFPreference
+  ) where
 
 import Prelude
-import Control.Monad.Aff (Aff())
-import Selenium.Capabilities
-import Selenium.Types
-import Data.List (List(), singleton)
-import Data.Foldable (foldl)
-import Data.Foreign (Foreign())
-import Control.Monad.Writer (Writer(), execWriter)
+
+import Control.Monad.Aff (Aff)
+import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
+
+import Data.Foldable (foldl)
+import Data.Foreign (Foreign)
+import Data.List (List, singleton)
+
+import Selenium.Capabilities (Capabilities)
+import Selenium.Types (SELENIUM)
+
 import Unsafe.Coerce (unsafeCoerce)
 
 foreign import data FFProfile :: *

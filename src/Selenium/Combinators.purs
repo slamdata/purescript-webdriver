@@ -1,14 +1,17 @@
 module Selenium.Combinators where
 
 import Prelude
+
 import Control.Alt ((<|>))
-import Control.Monad.Trans (lift)
-import Data.Maybe (Maybe(), isJust, maybe)
-import Data.Either (Either(..), either)
-import Control.Monad.Error.Class (throwError)
 import Control.Monad.Eff.Exception (error)
-import Selenium.Monad
-import Selenium.Types
+import Control.Monad.Error.Class (throwError)
+import Control.Monad.Trans (lift)
+
+import Data.Either (Either(..), either)
+import Data.Maybe (Maybe, isJust, maybe)
+
+import Selenium.Monad (Selenium, getCurrentUrl, wait, attempt, findExact, tryRepeatedlyTo, tryRepeatedlyTo', findElement, byCss, later, byClassName, byName, byId, byXPath)
+import Selenium.Types (Element, Locator)
 
 -- | Retry computation until it successed but not more then `n` times
 retry :: forall e o a. Int -> Selenium e o a -> Selenium e o a

@@ -1,7 +1,8 @@
 module Selenium.Capabilities where
 
 import Prelude
-import Data.Monoid
+
+import Data.Monoid (class Monoid)
 
 foreign import data Capabilities :: *
 foreign import emptyCapabilities :: Capabilities

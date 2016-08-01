@@ -1,11 +1,12 @@
 module Selenium.Types where
 
 import Prelude
-import Data.Foreign.Class (class IsForeign)
-import Data.Foreign (readString, ForeignError(..))
-import Data.String (toLower)
+
 import Data.Either (Either(..))
-import Data.Maybe (Maybe())
+import Data.Foreign (readString, ForeignError(..))
+import Data.Foreign.Class (class IsForeign)
+import Data.Maybe (Maybe)
+import Data.String (toLower)
 
 foreign import data Builder :: *
 foreign import data SELENIUM :: !

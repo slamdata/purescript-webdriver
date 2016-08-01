@@ -1,5 +1,7 @@
 // module Selenium
 
+require("chromedriver");
+
 var webdriver = require("selenium-webdriver"),
     By = webdriver.By,
     fs = require("fs"),
