@@ -6,7 +6,7 @@
     "test": "pulp test"
   },
   "dependencies": {
-    "chromedriver": "^2.21.2",
+    "chromedriver": "^2.22.0",
     "selenium-webdriver": "2.53.2"
   },
   "devDependencies": {
