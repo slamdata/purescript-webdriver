@@ -1,25 +1,28 @@
 module Selenium.Builder
-       ( build
-       , browser
-       , version
-       , platform
-       , usingServer
-       , scrollBehaviour
-       , withCapabilities
-       , Build()
-       ) where
+  ( build
+  , browser
+  , version
+  , platform
+  , usingServer
+  , scrollBehaviour
+  , withCapabilities
+  , Build
+  ) where
 
 import Prelude
-import Selenium.Types
-import Selenium.Browser
-import Data.Tuple
-import Data.List
-import Data.Function.Uncurried
-import Data.Foldable (foldl)
-import Control.Monad.Writer (Writer(), execWriter)
+
+import Control.Monad.Aff (Aff)
+import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
-import Control.Monad.Aff (Aff())
-import Selenium.Capabilities
+
+import Data.Foldable (foldl)
+import Data.Function.Uncurried (Fn2, runFn2)
+import Data.List (List(..), singleton)
+import Data.Tuple (Tuple(..))
+
+import Selenium.Browser (Browser, browserCapabilities, platformCapabilities, versionCapabilities)
+import Selenium.Capabilities (Capabilities, emptyCapabilities)
+import Selenium.Types (Builder, ScrollBehaviour, Driver, SELENIUM, SafariOptions, ProxyConfig, OperaOptions, LoggingPrefs, IEOptions, FirefoxOptions, ControlFlow, ChromeOptions)
 
 data Command
   = SetChromeOptions ChromeOptions

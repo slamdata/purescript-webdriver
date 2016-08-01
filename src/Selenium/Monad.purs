@@ -4,22 +4,26 @@
 module Selenium.Monad where
 
 import Prelude
-import Control.Monad.Eff.Exception (Error())
-import Data.Either (Either())
-import Data.Maybe (Maybe())
-import Data.Foreign (Foreign())
-import Data.List
-import DOM
-import Selenium.Types
-import Control.Monad.Eff.Console (CONSOLE())
-import Control.Monad.Eff.Ref (REF())
-import Control.Monad.Reader.Trans
-import Control.Monad.Reader.Class
+
 import Control.Monad.Aff as A
-import Control.Monad.Aff.Reattempt as A
+import Control.Monad.Aff.Reattempt (reattempt)
+import Control.Monad.Eff.Console (CONSOLE)
+import Control.Monad.Eff.Exception (Error)
+import Control.Monad.Eff.Ref (REF)
+import Control.Monad.Reader.Trans (ReaderT(..), lift, ask, runReaderT)
+
+import Data.Either (Either)
+import Data.Foreign (Foreign)
+import Data.List (List, fromFoldable)
+import Data.Maybe (Maybe)
+
+import DOM (DOM)
+
 import Selenium as S
-import Selenium.ActionSequence as S
-import Selenium.XHR as S
+import Selenium.ActionSequence as AS
+import Selenium.Types (WindowHandle, XHRStats, Element, Locator, Driver, FileDetector, Location, Size, Window, SELENIUM)
+import Selenium.XHR as XHR
+
 -- | `Driver` is field of `ReaderT` context
 -- | Usually selenium tests are run with tons of configs (i.e. xpath locators,
 -- | timeouts) all those configs can be putted to `Selenium e o a`
@@ -79,7 +83,7 @@ wait check time = ReaderT \r ->
 -- | Tries the provided Selenium computation repeatedly until the provided timeout expires
 tryRepeatedlyTo' :: forall a e o. Int -> Selenium e o a -> Selenium e o a
 tryRepeatedlyTo' time selenium = ReaderT \r ->
-  A.reattempt time (runReaderT selenium r)
+  reattempt time (runReaderT selenium r)
 
 -- | Tries the provided Selenium computation repeatedly until `Selenium`'s defaultTimeout expires
 tryRepeatedlyTo :: forall a e o. Selenium e o a -> Selenium e o a
@@ -188,12 +192,12 @@ getTitle = getDriver >>= S.getTitle >>> lift
 
 
 -- | Run sequence of actions
-sequence :: forall e o. S.Sequence Unit -> Selenium e o Unit
+sequence :: forall e o. AS.Sequence Unit -> Selenium e o Unit
 sequence seq = do
-  getDriver >>= lift <<< flip S.sequence seq
+  getDriver >>= lift <<< flip AS.sequence seq
 
 -- | Same as `sequence` but takes function of `ReaderT` as an argument
-actions :: forall e o. ({driver :: Driver, defaultTimeout :: Int |o} -> S.Sequence Unit) -> Selenium e o Unit
+actions :: forall e o. ({driver :: Driver, defaultTimeout :: Int |o} -> AS.Sequence Unit) -> Selenium e o Unit
 actions seqFn = do
   ctx <- ask
   sequence $ seqFn ctx
@@ -227,16 +231,16 @@ childExact :: forall e o. Element -> Locator -> Selenium e o Element
 childExact el loc = lift $ S.childExact el loc
 
 startSpying :: forall e o. Selenium e o Unit
-startSpying = getDriver >>= S.startSpying >>> lift
+startSpying = getDriver >>= XHR.startSpying >>> lift
 
 stopSpying :: forall e o. Selenium e o Unit
-stopSpying = getDriver >>= S.stopSpying >>> lift
+stopSpying = getDriver >>= XHR.stopSpying >>> lift
 
 clearLog :: forall e o. Selenium e o Unit
-clearLog = getDriver >>= S.clearLog >>> lift
+clearLog = getDriver >>= XHR.clearLog >>> lift
 
 getXHRStats :: forall e o. Selenium e o (List XHRStats)
-getXHRStats = getDriver >>= S.getStats >>> map fromFoldable >>> lift
+getXHRStats = getDriver >>= XHR.getStats >>> map fromFoldable >>> lift
 
 
 getWindowHandle :: forall e o. Selenium e o WindowHandle
