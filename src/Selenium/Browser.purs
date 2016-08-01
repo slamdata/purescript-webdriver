@@ -20,6 +20,8 @@ data Browser
   | Safari
 
 
+derive instance eqBrowser ∷ Eq Browser
+
 browser2str :: Browser -> String
 browser2str PhantomJS = "phantomjs"
 browser2str Chrome = "chrome"
