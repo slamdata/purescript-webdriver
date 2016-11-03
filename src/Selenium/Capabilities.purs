@@ -4,12 +4,12 @@ import Prelude
 
 import Data.Monoid (class Monoid)
 
-foreign import data Capabilities :: *
-foreign import emptyCapabilities :: Capabilities
-foreign import appendCapabilities :: Capabilities -> Capabilities -> Capabilities
+foreign import data Capabilities ∷ *
+foreign import emptyCapabilities ∷ Capabilities
+foreign import appendCapabilities ∷ Capabilities → Capabilities → Capabilities
 
-instance semigroupCapabilities :: Semigroup Capabilities where
+instance semigroupCapabilities ∷ Semigroup Capabilities where
   append = appendCapabilities
 
-instance monoidCapabilities :: Monoid Capabilities where
+instance monoidCapabilities ∷ Monoid Capabilities where
   mempty = emptyCapabilities

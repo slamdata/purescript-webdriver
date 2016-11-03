@@ -2,9 +2,10 @@ module Selenium.XHR where
 
 import Prelude
 
-import Control.Monad.Aff (Aff())
+import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
+import Control.Monad.Except (runExcept)
 
 import Data.Either (either, Either(..))
 import Data.Foreign (readBoolean, isUndefined, readArray)
@@ -17,7 +18,7 @@ import Selenium.Types (XHRStats, SELENIUM, Driver)
 
 -- | Start spy on xhrs. It defines global variable in browser
 -- | and put information about to it.
-startSpying :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
+startSpying ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) Unit
 startSpying driver = void $
   executeStr driver """
 "use strict"
@@ -101,7 +102,7 @@ if (window.__SELENIUM__) {
 """
 
 -- | Return xhr's method to initial. Will not raise an error if hasn't been initiated
-stopSpying :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
+stopSpying ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) Unit
 stopSpying driver = void $ executeStr driver """
 if (window.__SELENIUM__) {
     window.__SELENIUM__.unspy();
@@ -109,9 +110,9 @@ if (window.__SELENIUM__) {
 """
 
 -- | Clean log. Will raise an error if spying hasn't been initiated
-clearLog :: forall e. Driver -> Aff (selenium :: SELENIUM|e) Unit
+clearLog ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) Unit
 clearLog driver = do
-  success <- executeStr driver """
+  success ← executeStr driver """
   if (!window.__SELENIUM__) {
     return false;
   }
@@ -120,14 +121,14 @@ clearLog driver = do
     return true;
   }
   """
-  case readBoolean success of
-    Right true -> pure unit
-    _ -> throwError $ error "spying is inactive"
+  case runExcept $ readBoolean success of
+    Right true → pure unit
+    _ → throwError $ error "spying is inactive"
 
 -- | Get recorded xhr stats. If spying has not been set will raise an error
-getStats :: forall e. Driver -> Aff (selenium :: SELENIUM|e) (Array XHRStats)
+getStats ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) (Array XHRStats)
 getStats driver = do
-  log <- executeStr driver """
+  log ← executeStr driver """
   if (!window.__SELENIUM__) {
     return undefined;
   }
@@ -135,18 +136,18 @@ getStats driver = do
     return window.__SELENIUM__.log;
   }
   """
-  if isUndefined log
-    then throwError $ error "spying is inactive"
-    else pure unit
-  either (const $ throwError $ error "incorrect log") pure do
-    arr <- readArray log
-    for arr \el -> do
-      state <- readProp "state" el
-      method <- readProp "method" el
-      url <- readProp "url" el
-      async <- readProp "async" el
-      password <- unNullOrUndefined <$> readProp "password" el
-      user <- unNullOrUndefined <$> readProp "user" el
+  when (isUndefined log)
+    $ throwError $ error "spying is inactive"
+
+  either (const $ throwError $ error "incorrect log") pure $ runExcept do
+    arr ← readArray log
+    for arr \el → do
+      state ← readProp "state" el
+      method ← readProp "method" el
+      url ← readProp "url" el
+      async ← readProp "async" el
+      password ← unNullOrUndefined <$> readProp "password" el
+      user ← unNullOrUndefined <$> readProp "user" el
       pure { state: state
            , method: method
            , url: url
