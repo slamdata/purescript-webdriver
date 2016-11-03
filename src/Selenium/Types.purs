@@ -2,32 +2,34 @@ module Selenium.Types where
 
 import Prelude
 
-import Data.Either (Either(..))
+import Control.Monad.Error.Class (throwError)
+
 import Data.Foreign (readString, ForeignError(..))
 import Data.Foreign.Class (class IsForeign)
 import Data.Maybe (Maybe)
+import Data.List.NonEmpty as NEL
 import Data.String (toLower)
 
-foreign import data Builder :: *
-foreign import data SELENIUM :: !
-foreign import data Driver :: *
-foreign import data Window :: *
-foreign import data Until :: *
-foreign import data Element :: *
-foreign import data Locator :: *
-foreign import data ActionSequence :: *
-foreign import data MouseButton :: *
-foreign import data ChromeOptions :: *
-foreign import data ControlFlow :: *
-foreign import data FirefoxOptions :: *
-foreign import data IEOptions :: *
-foreign import data LoggingPrefs :: *
-foreign import data OperaOptions :: *
-foreign import data ProxyConfig :: *
-foreign import data SafariOptions :: *
-foreign import data ScrollBehaviour :: *
-foreign import data FileDetector :: *
-foreign import data WindowHandle :: *
+foreign import data Builder ∷ *
+foreign import data SELENIUM ∷ !
+foreign import data Driver ∷ *
+foreign import data Window ∷ *
+foreign import data Until ∷ *
+foreign import data Element ∷ *
+foreign import data Locator ∷ *
+foreign import data ActionSequence ∷ *
+foreign import data MouseButton ∷ *
+foreign import data ChromeOptions ∷ *
+foreign import data ControlFlow ∷ *
+foreign import data FirefoxOptions ∷ *
+foreign import data IEOptions ∷ *
+foreign import data LoggingPrefs ∷ *
+foreign import data OperaOptions ∷ *
+foreign import data ProxyConfig ∷ *
+foreign import data SafariOptions ∷ *
+foreign import data ScrollBehaviour ∷ *
+foreign import data FileDetector ∷ *
+foreign import data WindowHandle ∷ *
 
 -- | Copied from `purescript-affjax` because the only thing we
 -- | need from `affjax` is `Method`
@@ -43,7 +45,9 @@ data Method
   | COPY
   | CustomMethod String
 
-instance eqMethod :: Eq Method where
+derive instance eqMethod ∷ Eq Method
+{-
+instance eqMethod ∷ Eq Method where
   eq DELETE DELETE = true
   eq GET GET = true
   eq HEAD HEAD = true
@@ -55,62 +59,57 @@ instance eqMethod :: Eq Method where
   eq COPY COPY = true
   eq (CustomMethod a) (CustomMethod b) = a == b
   eq _ _ = false
+-}
 
-
-instance methodIsForeign :: IsForeign Method where
+instance methodIsForeign ∷ IsForeign Method where
   read f = do
-    str <- readString f
+    str ← readString f
     pure $ case toLower str of
-      "delete" -> DELETE
-      "get" -> GET
-      "head" -> HEAD
-      "options" -> OPTIONS
-      "patch" -> PATCH
-      "post" -> POST
-      "put" -> PUT
-      "move" -> MOVE
-      "copy" -> COPY
-      a -> CustomMethod a
+      "delete" → DELETE
+      "get" → GET
+      "head" → HEAD
+      "options" → OPTIONS
+      "patch" → PATCH
+      "post" → POST
+      "put" → PUT
+      "move" → MOVE
+      "copy" → COPY
+      a → CustomMethod a
 
 data XHRState
   = Stale
   | Opened
   | Loaded
 
-instance xhrStateEq :: Eq XHRState where
-  eq Stale Stale = true
-  eq Opened Opened = true
-  eq Loaded Loaded = true
-  eq _ _ = false
+derive instance eqXHRState ∷ Eq XHRState
 
-instance xhrStateIsForeign :: IsForeign XHRState where
+instance xhrStateIsForeign ∷ IsForeign XHRState where
   read f = do
-    str <- readString f
+    str ← readString f
     case str of
-      "stale" -> pure Stale
-      "opened" -> pure Opened
-      "loaded" -> pure Loaded
-      _ -> Left $ TypeMismatch "xhr state" "string"
-
+      "stale" → pure Stale
+      "opened" → pure Opened
+      "loaded" → pure Loaded
+      _ → throwError $ NEL.singleton $ TypeMismatch "xhr state" "string"
 
 
 type Location =
-  { x :: Int
-  , y :: Int
+  { x ∷ Int
+  , y ∷ Int
   }
 
 type Size =
-  { width :: Int
-  , height :: Int
+  { width ∷ Int
+  , height ∷ Int
   }
 newtype ControlKey = ControlKey String
 
 
 type XHRStats =
-  { method :: Method
-  , url :: String
-  , async :: Boolean
-  , user :: Maybe String
-  , password :: Maybe String
-  , state :: XHRState
+  { method ∷ Method
+  , url ∷ String
+  , async ∷ Boolean
+  , user ∷ Maybe String
+  , password ∷ Maybe String
+  , state ∷ XHRState
   }
