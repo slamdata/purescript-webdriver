@@ -110,8 +110,8 @@ sequence driver commands = do
   performSequence $ interpret (execWriter $ unSequence commands) seq
 
 interpret ∷ List Command → ActionSequence → ActionSequence
-interpret commands seq =
-  foldl foldFn seq commands
+interpret commands initSeq =
+  foldl foldFn initSeq commands
   where
   foldFn ∷ ActionSequence → Command → ActionSequence
   foldFn seq (Click btn el) = runFn3 _click seq btn el
