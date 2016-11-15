@@ -88,7 +88,7 @@ build dsl = do
       _build $ runFn2 _withCapabilities (interpret commands builder) capabilities
 
 interpret ∷ List Command → Builder → Builder
-interpret commands b = foldl foldFn b commands
+interpret commands initialBuilder = foldl foldFn initialBuilder commands
   where
   foldFn ∷ Builder → Command → Builder
   foldFn b (UsingServer s) = runFn2 _usingServer b s
