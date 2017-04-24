@@ -1,35 +1,33 @@
 module Selenium.Types where
 
 import Prelude
-
+import Control.Monad.Eff (kind Effect)
 import Control.Monad.Error.Class (throwError)
-
-import Data.Foreign (readString, ForeignError(..))
-import Data.Foreign.Class (class IsForeign)
-import Data.Maybe (Maybe)
+import Data.Foreign (F, Foreign, ForeignError(..), readString)
 import Data.List.NonEmpty as NEL
+import Data.Maybe (Maybe)
 import Data.String (toLower)
 
-foreign import data Builder ∷ *
-foreign import data SELENIUM ∷ !
-foreign import data Driver ∷ *
-foreign import data Window ∷ *
-foreign import data Until ∷ *
-foreign import data Element ∷ *
-foreign import data Locator ∷ *
-foreign import data ActionSequence ∷ *
-foreign import data MouseButton ∷ *
-foreign import data ChromeOptions ∷ *
-foreign import data ControlFlow ∷ *
-foreign import data FirefoxOptions ∷ *
-foreign import data IEOptions ∷ *
-foreign import data LoggingPrefs ∷ *
-foreign import data OperaOptions ∷ *
-foreign import data ProxyConfig ∷ *
-foreign import data SafariOptions ∷ *
-foreign import data ScrollBehaviour ∷ *
-foreign import data FileDetector ∷ *
-foreign import data WindowHandle ∷ *
+foreign import data Builder ∷ Type
+foreign import data SELENIUM ∷ Effect
+foreign import data Driver ∷ Type
+foreign import data Window ∷ Type
+foreign import data Until ∷ Type
+foreign import data Element ∷ Type
+foreign import data Locator ∷ Type
+foreign import data ActionSequence ∷ Type
+foreign import data MouseButton ∷ Type
+foreign import data ChromeOptions ∷ Type
+foreign import data ControlFlow ∷ Type
+foreign import data FirefoxOptions ∷ Type
+foreign import data IEOptions ∷ Type
+foreign import data LoggingPrefs ∷ Type
+foreign import data OperaOptions ∷ Type
+foreign import data ProxyConfig ∷ Type
+foreign import data SafariOptions ∷ Type
+foreign import data ScrollBehaviour ∷ Type
+foreign import data FileDetector ∷ Type
+foreign import data WindowHandle ∷ Type
 
 -- | Copied from `purescript-affjax` because the only thing we
 -- | need from `affjax` is `Method`
@@ -46,35 +44,21 @@ data Method
   | CustomMethod String
 
 derive instance eqMethod ∷ Eq Method
-{-
-instance eqMethod ∷ Eq Method where
-  eq DELETE DELETE = true
-  eq GET GET = true
-  eq HEAD HEAD = true
-  eq OPTIONS OPTIONS = true
-  eq PATCH PATCH = true
-  eq POST POST = true
-  eq PUT PUT = true
-  eq MOVE MOVE = true
-  eq COPY COPY = true
-  eq (CustomMethod a) (CustomMethod b) = a == b
-  eq _ _ = false
--}
 
-instance methodIsForeign ∷ IsForeign Method where
-  read f = do
-    str ← readString f
-    pure $ case toLower str of
-      "delete" → DELETE
-      "get" → GET
-      "head" → HEAD
-      "options" → OPTIONS
-      "patch" → PATCH
-      "post" → POST
-      "put" → PUT
-      "move" → MOVE
-      "copy" → COPY
-      a → CustomMethod a
+readMethod ∷ Foreign → F Method
+readMethod f = do
+  str ← readString f
+  pure $ case toLower str of
+    "delete" → DELETE
+    "get" → GET
+    "head" → HEAD
+    "options" → OPTIONS
+    "patch" → PATCH
+    "post" → POST
+    "put" → PUT
+    "move" → MOVE
+    "copy" → COPY
+    a → CustomMethod a
 
 data XHRState
   = Stale
@@ -83,14 +67,14 @@ data XHRState
 
 derive instance eqXHRState ∷ Eq XHRState
 
-instance xhrStateIsForeign ∷ IsForeign XHRState where
-  read f = do
-    str ← readString f
-    case str of
-      "stale" → pure Stale
-      "opened" → pure Opened
-      "loaded" → pure Loaded
-      _ → throwError $ NEL.singleton $ TypeMismatch "xhr state" "string"
+readXHRState ∷ Foreign → F XHRState
+readXHRState f = do
+  str ← readString f
+  case str of
+    "stale" → pure Stale
+    "opened" → pure Opened
+    "loaded" → pure Loaded
+    _ → throwError $ NEL.singleton $ TypeMismatch "xhr state" "string"
 
 
 type Location =
@@ -102,8 +86,8 @@ type Size =
   { width ∷ Int
   , height ∷ Int
   }
-newtype ControlKey = ControlKey String
 
+newtype ControlKey = ControlKey String
 
 type XHRStats =
   { method ∷ Method

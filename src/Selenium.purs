@@ -51,15 +51,14 @@ module Selenium
   ) where
 
 import Prelude
-
 import Control.Monad.Aff (Aff, attempt)
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
-
 import Data.Array (uncons)
 import Data.Either (either)
 import Data.Foreign (Foreign)
 import Data.Maybe (Maybe(..))
+import Data.Time.Duration (Milliseconds)
 import Data.Tuple (Tuple(..))
 import Data.Unfoldable (class Unfoldable, unfoldr)
 
@@ -86,7 +85,7 @@ foreign import get
 foreign import wait
   ∷ ∀ e
   . Aff (selenium ∷ SELENIUM|e) Boolean
-  → Int
+  → Milliseconds
   → Driver
   → Aff (selenium ∷ SELENIUM|e) Unit
 

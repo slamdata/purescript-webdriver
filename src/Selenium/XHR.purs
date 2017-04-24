@@ -1,20 +1,16 @@
 module Selenium.XHR where
 
 import Prelude
-
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Except (runExcept)
-
 import Data.Either (either, Either(..))
-import Data.Foreign (readBoolean, isUndefined, readArray)
-import Data.Foreign.Class (readProp)
-import Data.Foreign.NullOrUndefined (unNullOrUndefined)
-import Data.Traversable (for)
-
+import Data.Foreign (isUndefined, readArray, readBoolean, readNullOrUndefined, readString)
+import Data.Foreign.Index (readProp)
+import Data.Traversable (traverse, for)
 import Selenium (executeStr)
-import Selenium.Types (XHRStats, SELENIUM, Driver)
+import Selenium.Types (Driver, SELENIUM, XHRStats, readMethod, readXHRState)
 
 -- | Start spy on xhrs. It defines global variable in browser
 -- | and put information about to it.
@@ -142,12 +138,12 @@ getStats driver = do
   either (const $ throwError $ error "incorrect log") pure $ runExcept do
     arr ← readArray log
     for arr \el → do
-      state ← readProp "state" el
-      method ← readProp "method" el
-      url ← readProp "url" el
-      async ← readProp "async" el
-      password ← unNullOrUndefined <$> readProp "password" el
-      user ← unNullOrUndefined <$> readProp "user" el
+      state ← readXHRState =<< readProp "state" el
+      method ← readMethod =<< readProp "method" el
+      url ← readString =<< readProp "url" el
+      async ← readBoolean =<< readProp "async" el
+      password ← traverse readString =<< readNullOrUndefined =<< readProp "password" el
+      user ← traverse readString =<< readNullOrUndefined =<< readProp "user" el
       pure { state: state
            , method: method
            , url: url
