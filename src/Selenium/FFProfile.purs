@@ -28,8 +28,8 @@ import Selenium.Types (SELENIUM)
 
 import Unsafe.Coerce (unsafeCoerce)
 
-foreign import data FFProfile ∷ *
-foreign import data FFPreference ∷ *
+foreign import data FFProfile ∷ Type
+foreign import data FFPreference ∷ Type
 
 data Command
   = SetPreference String FFPreference

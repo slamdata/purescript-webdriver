@@ -4,7 +4,7 @@ import Prelude
 
 import Data.Monoid (class Monoid)
 
-foreign import data Capabilities ∷ *
+foreign import data Capabilities ∷ Type
 foreign import emptyCapabilities ∷ Capabilities
 foreign import appendCapabilities ∷ Capabilities → Capabilities → Capabilities
 

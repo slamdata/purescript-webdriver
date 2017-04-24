@@ -4,35 +4,22 @@
 module Selenium.Monad where
 
 import Prelude
-
 import Control.Monad.Aff as A
 import Control.Monad.Aff.Reattempt (reattempt)
 import Control.Monad.Eff.Console (CONSOLE)
 import Control.Monad.Eff.Exception (Error)
 import Control.Monad.Eff.Ref (REF)
 import Control.Monad.Reader.Trans (ReaderT(..), lift, ask, runReaderT)
-
 import Data.Either (Either)
 import Data.Foreign (Foreign)
+import Data.Int as Int
 import Data.List (List, fromFoldable)
 import Data.Maybe (Maybe)
-
+import Data.Time.Duration (class Duration, fromDuration, Milliseconds(..))
 import DOM (DOM)
-
 import Selenium as S
 import Selenium.ActionSequence as AS
-import Selenium.Types
-  ( WindowHandle
-  , XHRStats
-  , Element
-  , Locator
-  , Driver
-  , FileDetector
-  , Location
-  , Size
-  , Window
-  , SELENIUM
-  )
+import Selenium.Types (Driver, Element, FileDetector, Location, Locator, SELENIUM, Size, Window, WindowHandle, XHRStats)
 import Selenium.XHR as XHR
 
 -- | `Driver` is field of `ReaderT` context
@@ -40,7 +27,7 @@ import Selenium.XHR as XHR
 -- | timeouts) all those configs can be putted to `Selenium e o a`
 type Selenium e o =
   ReaderT
-    {driver ∷ Driver, defaultTimeout ∷ Int |o}
+    {driver ∷ Driver, defaultTimeout ∷ Milliseconds |o}
     (A.Aff (console ∷ CONSOLE, selenium ∷ SELENIUM, dom ∷ DOM, ref ∷ REF |e))
 
 -- | get driver from context
@@ -77,28 +64,29 @@ attempt ∷ ∀ e o a. Selenium e o a → Selenium e o (Either Error a)
 attempt check = ReaderT \r →
   A.attempt $ runReaderT check r
 
-later ∷ ∀ e o a. Int → Selenium e o a → Selenium e o a
-later time check = ReaderT \r →
-  A.later' time $ runReaderT check r
-
+later ∷ ∀ d e o a. Duration d ⇒ d → Selenium e o a → Selenium e o a
+later time check = ReaderT \r → do
+  A.delay (fromDuration time)
+  runReaderT check r
 
 -- LIFT `Selenium` funcs to `Selenium.Monad`
 get ∷ ∀ e o. String → Selenium e o Unit
 get url =
   getDriver >>= lift <<< flip S.get url
 
-wait ∷ ∀ e o. Selenium e o Boolean → Int → Selenium e o Unit
+wait ∷ ∀ d e o. Duration d ⇒ Selenium e o Boolean → d → Selenium e o Unit
 wait check time = ReaderT \r →
-  S.wait (runReaderT check r) time r.driver
+  S.wait (runReaderT check r) (fromDuration time) r.driver
 
 -- | Tries the provided Selenium computation repeatedly until the provided timeout expires
-tryRepeatedlyTo' ∷ ∀ a e o. Int → Selenium e o a → Selenium e o a
+tryRepeatedlyTo' ∷ ∀ d a e o. Duration d ⇒ d → Selenium e o a → Selenium e o a
 tryRepeatedlyTo' time selenium = ReaderT \r →
-  reattempt time (runReaderT selenium r)
+  reattempt (fromDuration time) (runReaderT selenium r)
 
 -- | Tries the provided Selenium computation repeatedly until `Selenium`'s defaultTimeout expires
 tryRepeatedlyTo ∷ ∀ a e o. Selenium e o a → Selenium e o a
-tryRepeatedlyTo selenium = ask >>= \r → tryRepeatedlyTo' r.defaultTimeout selenium
+tryRepeatedlyTo selenium = ask >>= \r →
+  tryRepeatedlyTo' r.defaultTimeout selenium
 
 byCss ∷ ∀ e o. String → Selenium e o Locator
 byCss = lift <<< S.byCss
@@ -210,7 +198,7 @@ sequence seq = do
 -- | Same as `sequence` but takes function of `ReaderT` as an argument
 actions
   ∷ ∀ e o
-  . ({driver ∷ Driver, defaultTimeout ∷ Int |o} → AS.Sequence Unit)
+  . ({ driver ∷ Driver, defaultTimeout ∷ Milliseconds | o } → AS.Sequence Unit)
   → Selenium e o Unit
 actions seqFn = do
   ctx ← ask
@@ -218,7 +206,9 @@ actions seqFn = do
 
 -- | Stop computations
 stop ∷ ∀ e o. Selenium e o Unit
-stop = wait (later top $ pure false) top
+stop = wait (later msMax $ pure false) msMax
+  where
+  msMax = Milliseconds (Int.toNumber (top ∷ Int))
 
 refresh ∷ ∀ e o. Selenium e o Unit
 refresh = getDriver >>= S.refresh >>> lift

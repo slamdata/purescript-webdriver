@@ -1,15 +1,13 @@
 module Selenium.Combinators where
 
 import Prelude
-
 import Control.Alt ((<|>))
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Trans.Class (lift)
-
 import Data.Either (Either(..), either)
 import Data.Maybe (Maybe, isJust, maybe)
-
+import Data.Time.Duration (class Duration, Milliseconds(..))
 import Selenium.Monad (Selenium, getCurrentUrl, wait, attempt, findExact, tryRepeatedlyTo, tryRepeatedlyTo', findElement, byCss, later, byClassName, byName, byId, byXPath)
 import Selenium.Types (Element, Locator)
 
@@ -32,7 +30,7 @@ tryFind probablyLocator =
   (byName probablyLocator >>= findExact) <|>
   (byClassName probablyLocator >>= findExact)
 
-waitUntilJust ∷ ∀ e o a. Selenium e o (Maybe a) → Int → Selenium e o a
+waitUntilJust ∷ ∀ d e o a. Duration d ⇒ Selenium e o (Maybe a) → d → Selenium e o a
 waitUntilJust check time = do
   wait (checker $ isJust <$> check) time
   check >>= maybe (throwError $ error $ "Maybe was not Just after waiting for isJust") pure
@@ -42,7 +40,7 @@ checker ∷ ∀ e o. Selenium e o Boolean → Selenium e o Boolean
 checker check =
   check >>= if _
     then pure true
-    else later 500 $ checker check
+    else later (Milliseconds 500.0) $ checker check
 
 getElementByCss ∷ ∀ e o. String → Selenium e o Element
 getElementByCss cls =
@@ -62,7 +60,7 @@ contra check = do
 
 -- | Repeatedly attempts to find an element using the provided selector until the
 -- | provided timeout elapses.
-tryToFind' ∷ ∀ e o. Int → Selenium e o Locator → Selenium e o Element
+tryToFind' ∷ ∀ d e o. Duration d ⇒ d → Selenium e o Locator → Selenium e o Element
 tryToFind' timeout locator = tryRepeatedlyTo' timeout $ locator >>= findExact
 
 -- | Repeatedly tries to find an element using the provided selector until
@@ -74,7 +72,7 @@ tryToFind locator = tryRepeatedlyTo $ locator >>= findExact
 -- | finishes when check evaluates to true.
 -- | If there is an error during check or it constantly returns `false`
 -- | throws error with message (second arg)
-await ∷ ∀ e o. Int → Selenium e o Boolean → Selenium e o Unit
+await ∷ ∀ d e o. Duration d ⇒ d → Selenium e o Boolean → Selenium e o Unit
 await timeout check = do
   ei ← attempt $ wait (checker check) timeout
   case ei of
