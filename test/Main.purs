@@ -26,7 +26,7 @@ main = do
 
   goInput driver el = do
     sendKeysEl "webdriver" el
-    byName "btnK" >>=
+    byName "btnG" >>=
       findElement driver >>=
       maybe noButton (goButton driver)
 
