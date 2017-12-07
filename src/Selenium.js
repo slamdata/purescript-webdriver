@@ -415,6 +415,12 @@ exports.switchTo = function(handle) {
     };
 };
 
+exports.switchToActiveElement = function(driver) {
+    return funtion(cb, eb) {
+        return driver.switchTo().activeElement().then(cb, eb);
+    };
+};
+
 exports.close = function(driver) {
     return function(cb, eb) {
         return driver.close().then(cb, eb);
