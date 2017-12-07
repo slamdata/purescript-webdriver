@@ -6,8 +6,8 @@
     "test": "pulp test"
   },
   "dependencies": {
-    "chromedriver": "^2.29.0",
-    "selenium-webdriver": "3.4.0"
+    "chromedriver": "^2.33.2",
+    "selenium-webdriver": "3.6.0"
   },
   "devDependencies": {
     "pulp": "^11.0.0",

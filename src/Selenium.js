@@ -416,9 +416,9 @@ exports.switchTo = function(handle) {
 };
 
 exports.switchToActiveElement = function(driver) {
-    return function(cb, eb) {
-        return driver.switchTo().activeElement().then(cb, eb);
-    };
+  return function(cb, eb) {
+    return driver.switchTo().activeElement().then(cb, eb);
+  };
 };
 
 exports.close = function(driver) {
