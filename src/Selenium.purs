@@ -47,6 +47,7 @@ module Selenium
   , getWindowHandle
   , getAllWindowHandles
   , switchTo
+  , switchToActiveElement
   , close
   ) where
 
@@ -305,5 +306,7 @@ fromArray =
 
 foreign import switchTo
   ∷ ∀ e. WindowHandle → Driver → Aff (selenium ∷ SELENIUM |e) Unit
+foreign import switchToActiveElement 
+  ∷ ∀ e . Driver → Aff (selenium ∷ SELENIUM | e) Unit
 foreign import close
   ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM |e) Unit
