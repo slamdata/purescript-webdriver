@@ -2,7 +2,7 @@
 
 var webdriver = require("selenium-webdriver");
 
-exports._newBuilder = function(cb, eb) {
+exports._newBuilder = function(eb, cb) {
     try {
         return cb(new webdriver.Builder());
     }
@@ -12,7 +12,7 @@ exports._newBuilder = function(cb, eb) {
 };
 
 exports._build = function(builder) {
-    return function(cb, eb) {
+    return function(eb, cb) {
         try {
             return cb(builder.build());
         }

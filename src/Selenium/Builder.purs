@@ -12,14 +12,13 @@ module Selenium.Builder
 import Prelude
 
 import Control.Monad.Aff (Aff)
+import Control.Monad.Aff.Compat (EffFnAff, fromEffFnAff)
 import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
-
 import Data.Foldable (foldl)
 import Data.Function.Uncurried (Fn2, runFn2)
 import Data.List (List(..), singleton)
 import Data.Tuple (Tuple(..))
-
 import Selenium.Browser (Browser, browserCapabilities, platformCapabilities, versionCapabilities)
 import Selenium.Capabilities (Capabilities, emptyCapabilities)
 import Selenium.Types (Builder, ScrollBehaviour, Driver, SELENIUM, SafariOptions, ProxyConfig, OperaOptions, LoggingPrefs, IEOptions, FirefoxOptions, ControlFlow, ChromeOptions)
@@ -82,10 +81,10 @@ browser = withCapabilities <<< browserCapabilities
 
 build ∷ ∀ e. Build Unit → Aff (selenium ∷ SELENIUM|e) Driver
 build dsl = do
-  builder ← _newBuilder
+  builder ← fromEffFnAff _newBuilder
   case execWriter $ unBuild dsl of
     Tuple capabilities commands →
-      _build $ runFn2 _withCapabilities (interpret commands builder) capabilities
+      fromEffFnAff $ _build $ runFn2 _withCapabilities (interpret commands builder) capabilities
 
 interpret ∷ List Command → Builder → Builder
 interpret commands initialBuilder = foldl foldFn initialBuilder commands
@@ -96,8 +95,8 @@ interpret commands initialBuilder = foldl foldFn initialBuilder commands
   foldFn b _ = b
 
 
-foreign import _newBuilder ∷ ∀ e. Aff (selenium ∷ SELENIUM|e) Builder
-foreign import _build ∷ ∀ e. Builder → Aff (selenium ∷ SELENIUM|e) Driver
+foreign import _newBuilder ∷ ∀ e. EffFnAff (selenium ∷ SELENIUM|e) Builder
+foreign import _build ∷ ∀ e. Builder → EffFnAff (selenium ∷ SELENIUM|e) Driver
 
 foreign import _usingServer ∷ Fn2 Builder String Builder
 foreign import _setScrollBehaviour ∷ Fn2 Builder ScrollBehaviour Builder

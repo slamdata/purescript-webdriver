@@ -1,8 +1,8 @@
 // module Selenium.ActionSequence
 var webdriver = require("selenium-webdriver");
 
-exports.newSequence = function(driver) {
-    return function(cb, eb) {
+exports._newSequence = function(driver) {
+    return function(eb, cb) {
         try {
             return cb(new webdriver.ActionSequence(driver));
         }
@@ -12,8 +12,8 @@ exports.newSequence = function(driver) {
     };
 };
 
-exports.performSequence = function(sequence) {
-    return function(cb, eb) {
+exports._performSequence = function(sequence) {
+    return function(eb, cb) {
         try {
             return sequence.perform().then(cb, eb);
         }

@@ -16,16 +16,14 @@ module Selenium.FFProfile
 import Prelude
 
 import Control.Monad.Aff (Aff)
+import Control.Monad.Aff.Compat (EffFnAff, fromEffFnAff)
 import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
-
 import Data.Foldable (foldl)
 import Data.Foreign (Foreign)
 import Data.List (List, singleton)
-
 import Selenium.Capabilities (Capabilities)
 import Selenium.Types (SELENIUM)
-
 import Unsafe.Coerce (unsafeCoerce)
 
 foreign import data FFProfile ∷ Type
@@ -73,8 +71,8 @@ setBoolPreference key = setPreference key <<< boolToFFPreference
 
 buildFFProfile ∷ ∀ e. FFProfileBuild Unit → Aff (selenium ∷ SELENIUM|e) Capabilities
 buildFFProfile commands = do
-  profile ← interpret (execWriter $ unFFProfileBuild commands) <$> _newFFProfile
-  _encode profile
+  profile ← interpret (execWriter $ unFFProfileBuild commands) <$> fromEffFnAff _newFFProfile
+  fromEffFnAff $ _encode profile
 
 interpret ∷ List Command → FFProfile→ FFProfile
 interpret commands b = foldl foldFn b commands
@@ -84,8 +82,8 @@ interpret commands b = foldl foldFn b commands
 
 
 foreign import _setFFPreference ∷ String → FFPreference → FFProfile → FFProfile
-foreign import _newFFProfile ∷ ∀ e. Aff (selenium ∷ SELENIUM|e) FFProfile
-foreign import _encode ∷ ∀ e. FFProfile → Aff (selenium ∷ SELENIUM|e) Capabilities
+foreign import _newFFProfile ∷ ∀ e. EffFnAff (selenium ∷ SELENIUM|e) FFProfile
+foreign import _encode ∷ ∀ e. FFProfile → EffFnAff (selenium ∷ SELENIUM|e) Capabilities
 
 
 intToFFPreference ∷ Int → FFPreference

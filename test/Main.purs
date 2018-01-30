@@ -1,6 +1,7 @@
 module Test.Main where
 
 import Prelude
+
 import Control.Monad.Aff (launchAff, delay)
 import Control.Monad.Aff.Console (log)
 import Control.Monad.Eff (Eff)
@@ -8,7 +9,7 @@ import Control.Monad.Eff.Console (CONSOLE)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import Data.Maybe (maybe)
 import Data.Time.Duration (Milliseconds(..))
-import Selenium (findElement, byName, get, getTitle, quit, wait, clickEl, sendKeysEl)
+import Selenium (byCss, byName, clickEl, findElement, get, getTitle, quit, sendKeysEl, wait)
 import Selenium.Browser (Browser(..))
 import Selenium.Builder (browser, build)
 import Selenium.Types (SELENIUM)
@@ -22,11 +23,11 @@ main = do
       findElement driver >>=
       maybe noInput (goInput driver)
   where
-  noInput = void $ log "No input, sorry :("
+  noInput = void (log "No input, sorry :(")
 
   goInput driver el = do
     sendKeysEl "webdriver" el
-    byName "btnG" >>=
+    byCss ".ds .lsbb button.lsb" >>=
       findElement driver >>=
       maybe noButton (goButton driver)
 
