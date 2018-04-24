@@ -13,12 +13,7 @@ exports._newBuilder = function(eb, cb) {
 
 exports._build = function(builder) {
     return function(eb, cb) {
-        try {
-            return cb(builder.build());
-        }
-        catch (e) {
-            return eb(e);
-        }
+        builder.build().then(cb, eb);
     };
 };
 
