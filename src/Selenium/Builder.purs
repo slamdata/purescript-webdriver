@@ -11,8 +11,8 @@ module Selenium.Builder
 
 import Prelude
 
-import Control.Monad.Aff (Aff)
-import Control.Monad.Aff.Compat (EffFnAff, fromEffFnAff)
+import Effect.Aff (Aff)
+import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
 import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
 import Data.Foldable (foldl)
@@ -21,7 +21,7 @@ import Data.List (List(..), singleton)
 import Data.Tuple (Tuple(..))
 import Selenium.Browser (Browser, browserCapabilities, platformCapabilities, versionCapabilities)
 import Selenium.Capabilities (Capabilities, emptyCapabilities)
-import Selenium.Types (Builder, ScrollBehaviour, Driver, SELENIUM, SafariOptions, ProxyConfig, OperaOptions, LoggingPrefs, IEOptions, FirefoxOptions, ControlFlow, ChromeOptions)
+import Selenium.Types (Builder, ScrollBehaviour, Driver, SafariOptions, ProxyConfig, OperaOptions, LoggingPrefs, IEOptions, FirefoxOptions, ControlFlow, ChromeOptions)
 
 data Command
   = SetChromeOptions ChromeOptions
@@ -79,12 +79,12 @@ withCapabilities c = Build $ tell $ Tuple c noRules
 browser ∷ Browser → Build Unit
 browser = withCapabilities <<< browserCapabilities
 
-build ∷ ∀ e. Build Unit → Aff (selenium ∷ SELENIUM|e) Driver
+build ∷ Build Unit → Aff Driver
 build dsl = do
-  builder ← fromEffFnAff _newBuilder
+  builder ← fromEffectFnAff _newBuilder
   case execWriter $ unBuild dsl of
     Tuple capabilities commands →
-      fromEffFnAff $ _build $ runFn2 _withCapabilities (interpret commands builder) capabilities
+      fromEffectFnAff $ _build $ runFn2 _withCapabilities (interpret commands builder) capabilities
 
 interpret ∷ List Command → Builder → Builder
 interpret commands initialBuilder = foldl foldFn initialBuilder commands
@@ -95,8 +95,8 @@ interpret commands initialBuilder = foldl foldFn initialBuilder commands
   foldFn b _ = b
 
 
-foreign import _newBuilder ∷ ∀ e. EffFnAff (selenium ∷ SELENIUM|e) Builder
-foreign import _build ∷ ∀ e. Builder → EffFnAff (selenium ∷ SELENIUM|e) Driver
+foreign import _newBuilder ∷ EffectFnAff Builder
+foreign import _build ∷ Builder → EffectFnAff Driver
 
 foreign import _usingServer ∷ Fn2 Builder String Builder
 foreign import _setScrollBehaviour ∷ Fn2 Builder ScrollBehaviour Builder

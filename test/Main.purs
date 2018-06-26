@@ -2,19 +2,17 @@ module Test.Main where
 
 import Prelude
 
-import Control.Monad.Aff (launchAff, delay)
-import Control.Monad.Aff.Console (log)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE)
-import Control.Monad.Eff.Exception (EXCEPTION)
 import Data.Maybe (maybe)
 import Data.Time.Duration (Milliseconds(..))
+import Effect (Effect)
+import Effect.Aff (launchAff, delay)
+import Effect.Class (liftEffect)
+import Effect.Console (log)
 import Selenium (byCss, byName, clickEl, findElement, get, getTitle, quit, sendKeysEl, wait)
 import Selenium.Browser (Browser(..))
 import Selenium.Builder (browser, build)
-import Selenium.Types (SELENIUM)
 
-main :: Eff (selenium :: SELENIUM, console :: CONSOLE, exception :: EXCEPTION) Unit
+main :: Effect Unit
 main = do
   void $ launchAff do
     driver <- build $ browser Chrome
@@ -23,7 +21,7 @@ main = do
       findElement driver >>=
       maybe noInput (goInput driver)
   where
-  noInput = void (log "No input, sorry :(")
+  noInput = void (liftEffect (log "No input, sorry :("))
 
   goInput driver el = do
     sendKeysEl "webdriver" el
@@ -31,7 +29,7 @@ main = do
       findElement driver >>=
       maybe noButton (goButton driver)
 
-  noButton = void $ log "No submit button"
+  noButton = void $ liftEffect (log "No submit button")
 
   goButton driver button = do
     clickEl button

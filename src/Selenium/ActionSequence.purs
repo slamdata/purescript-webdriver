@@ -18,15 +18,15 @@ module Selenium.ActionSequence
 
 import Prelude
 
-import Control.Monad.Aff (Aff)
-import Control.Monad.Aff.Compat (EffFnAff, fromEffFnAff)
+import Effect.Aff (Aff)
+import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
 import Control.Monad.Writer (Writer, execWriter)
 import Control.Monad.Writer.Class (tell)
 import Data.Foldable (foldl)
 import Data.Function.Uncurried (Fn3, Fn2, runFn3, runFn2)
 import Data.List (List, singleton)
 import Selenium.MouseButton (leftButton)
-import Selenium.Types (ActionSequence, Location, Element, ControlKey, MouseButton, SELENIUM, Driver)
+import Selenium.Types (ActionSequence, Location, Element, ControlKey, MouseButton, Driver)
 
 data Command
   = Click MouseButton Element
@@ -103,7 +103,7 @@ dndToElement el tgt = rule $ DnDToElement el tgt
 dndToLocation ∷ Element → Location → Sequence Unit
 dndToLocation el tgt = rule $ DnDToLocation el tgt
 
-sequence ∷ ∀ e. Driver → Sequence Unit → Aff (selenium ∷ SELENIUM|e) Unit
+sequence ∷ Driver → Sequence Unit → Aff Unit
 sequence driver commands = do
   seq ← newSequence driver
   performSequence $ interpret (execWriter $ unSequence commands) seq
@@ -126,14 +126,14 @@ interpret commands initSeq =
   foldFn seq (DnDToLocation el tgt) = runFn3 _dndToLocation seq el tgt
 
 
-foreign import _newSequence ∷ ∀ e. Driver → EffFnAff (selenium ∷ SELENIUM|e) ActionSequence
-foreign import _performSequence ∷ ∀ e. ActionSequence → EffFnAff (selenium ∷ SELENIUM |e) Unit
+foreign import _newSequence ∷ Driver → EffectFnAff ActionSequence
+foreign import _performSequence ∷ ActionSequence → EffectFnAff Unit
 
-newSequence ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) ActionSequence
-newSequence = fromEffFnAff <<< _newSequence
+newSequence ∷ Driver → Aff ActionSequence
+newSequence = fromEffectFnAff <<< _newSequence
 
-performSequence ∷ ∀ e. ActionSequence → Aff (selenium ∷ SELENIUM |e) Unit
-performSequence = fromEffFnAff <<< _performSequence
+performSequence ∷ ActionSequence → Aff Unit
+performSequence = fromEffectFnAff <<< _performSequence
 
 foreign import _click ∷ Fn3 ActionSequence MouseButton Element ActionSequence
 foreign import _doubleClick ∷ Fn3 ActionSequence MouseButton Element ActionSequence
