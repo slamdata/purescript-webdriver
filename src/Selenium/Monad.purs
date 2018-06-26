@@ -4,22 +4,19 @@
 module Selenium.Monad where
 
 import Prelude
-import Control.Monad.Aff as A
-import Control.Monad.Aff.Reattempt (reattempt)
-import Control.Monad.Eff.Console (CONSOLE)
-import Control.Monad.Eff.Exception (Error)
-import Control.Monad.Eff.Ref (REF)
+import Effect.Aff as A
+import Effect.Aff.Reattempt (reattempt)
+import Effect.Exception (Error)
 import Control.Monad.Reader.Trans (ReaderT(..), lift, ask, runReaderT)
 import Data.Either (Either)
-import Data.Foreign (Foreign)
+import Foreign (Foreign)
 import Data.Int as Int
 import Data.List (List, fromFoldable)
 import Data.Maybe (Maybe)
 import Data.Time.Duration (class Duration, fromDuration, Milliseconds(..))
-import DOM (DOM)
 import Selenium as S
 import Selenium.ActionSequence as AS
-import Selenium.Types (Driver, Element, FileDetector, Location, Locator, SELENIUM, Size, Window, WindowHandle, XHRStats)
+import Selenium.Types (Driver, Element, FileDetector, Location, Locator, Size, Window, WindowHandle, XHRStats)
 import Selenium.XHR as XHR
 
 -- | `Driver` is field of `ReaderT` context
@@ -28,7 +25,7 @@ import Selenium.XHR as XHR
 type Selenium e o =
   ReaderT
     {driver ∷ Driver, defaultTimeout ∷ Milliseconds |o}
-    (A.Aff (console ∷ CONSOLE, selenium ∷ SELENIUM, dom ∷ DOM, ref ∷ REF |e))
+    A.Aff
 
 -- | get driver from context
 getDriver ∷ ∀ e o. Selenium e o Driver

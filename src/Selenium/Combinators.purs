@@ -2,7 +2,7 @@ module Selenium.Combinators where
 
 import Prelude
 import Control.Alt ((<|>))
-import Control.Monad.Eff.Exception (error)
+import Effect.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Trans.Class (lift)
 import Data.Either (Either(..), either)

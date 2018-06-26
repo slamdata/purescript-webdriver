@@ -1,15 +1,13 @@
 module Selenium.Types where
 
 import Prelude
-import Control.Monad.Eff (kind Effect)
 import Control.Monad.Error.Class (throwError)
-import Data.Foreign (F, Foreign, ForeignError(..), readString)
+import Foreign (F, Foreign, ForeignError(..), readString)
 import Data.List.NonEmpty as NEL
 import Data.Maybe (Maybe)
 import Data.String (toLower)
 
 foreign import data Builder ∷ Type
-foreign import data SELENIUM ∷ Effect
 foreign import data Driver ∷ Type
 foreign import data Window ∷ Type
 foreign import data Until ∷ Type

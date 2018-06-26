@@ -1,20 +1,20 @@
 module Selenium.XHR where
 
 import Prelude
-import Control.Monad.Aff (Aff)
-import Control.Monad.Eff.Exception (error)
+import Effect.Aff (Aff)
+import Effect.Exception (error)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Except (runExcept)
 import Data.Either (either, Either(..))
-import Data.Foreign (isUndefined, readArray, readBoolean, readNullOrUndefined, readString)
-import Data.Foreign.Index (readProp)
+import Foreign (isUndefined, readArray, readBoolean, readNullOrUndefined, readString)
+import Foreign.Index (readProp)
 import Data.Traversable (traverse, for)
 import Selenium (executeStr)
-import Selenium.Types (Driver, SELENIUM, XHRStats, readMethod, readXHRState)
+import Selenium.Types (Driver, XHRStats, readMethod, readXHRState)
 
 -- | Start spy on xhrs. It defines global variable in browser
 -- | and put information about to it.
-startSpying ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) Unit
+startSpying ∷ Driver → Aff Unit
 startSpying driver = void $
   executeStr driver """
 "use strict"
@@ -98,7 +98,7 @@ if (window.__SELENIUM__) {
 """
 
 -- | Return xhr's method to initial. Will not raise an error if hasn't been initiated
-stopSpying ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) Unit
+stopSpying ∷ Driver → Aff Unit
 stopSpying driver = void $ executeStr driver """
 if (window.__SELENIUM__) {
     window.__SELENIUM__.unspy();
@@ -106,7 +106,7 @@ if (window.__SELENIUM__) {
 """
 
 -- | Clean log. Will raise an error if spying hasn't been initiated
-clearLog ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) Unit
+clearLog ∷ Driver → Aff Unit
 clearLog driver = do
   success ← executeStr driver """
   if (!window.__SELENIUM__) {
@@ -122,7 +122,7 @@ clearLog driver = do
     _ → throwError $ error "spying is inactive"
 
 -- | Get recorded xhr stats. If spying has not been set will raise an error
-getStats ∷ ∀ e. Driver → Aff (selenium ∷ SELENIUM|e) (Array XHRStats)
+getStats ∷ Driver → Aff (Array XHRStats)
 getStats driver = do
   log ← executeStr driver """
   if (!window.__SELENIUM__) {

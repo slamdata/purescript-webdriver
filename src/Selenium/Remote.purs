@@ -1,6 +1,6 @@
 module Selenium.Remote where
 
-import Control.Monad.Eff (Eff)
+import Effect (Effect)
 import Selenium.Types
 
-foreign import fileDetector ∷ ∀ e. Eff (selenium ∷ SELENIUM | e) FileDetector
+foreign import fileDetector ∷ Effect FileDetector
